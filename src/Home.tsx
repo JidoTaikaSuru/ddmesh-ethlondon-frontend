@@ -20,7 +20,7 @@ export default function Home() {
 			</blockquote>
 			<div>
 				<Button onClick={() => navigate(`/getDbProvider`)}>Get a DB</Button>
-				<Button variant="secondary">Become a Provider</Button>
+				<Button variant="secondary" onClick={() => navigate(`/newDbProvider`)}>Become a Provider</Button>
 			</div>
 		</>
 	);
