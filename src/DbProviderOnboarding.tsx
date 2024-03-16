@@ -14,12 +14,15 @@ import * as React from "react";
 
 import {
   flexRender,
+  useReactTable,
+} from "@tanstack/react-table"
+
+import {
   getCoreRowModel,
   getFilteredRowModel,
   getPaginationRowModel,
   getSortedRowModel,
-  useReactTable,
-} from "@tanstack/react-table"
+} from "@tanstack/table-core"
 
 import {
   Table,
