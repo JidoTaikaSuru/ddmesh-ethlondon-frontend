@@ -6,7 +6,11 @@
  preserveAspectRatio="xMidYMid meet">
 
 <g transform="translate(0.000000,488.000000) scale(0.100000,-0.100000)"
+<<<<<<<< Updated upstream:src/assets/ddmesh-logo.svg
 fill="#FFFFFF" stroke="none">
+========
+ stroke="none" fill="#FFFFFF">
+>>>>>>>> Stashed changes:src/assets/ddmesh_logo.svg
 <path d="M2435 4189 c-1057 -91 -1864 -965 -1822 -1974 15 -367 130 -699 349
 -1010 84 -119 318 -353 435 -435 311 -217 626 -338 992 -380 136 -16 445 -8
 571 15 588 106 1081 431 1377 906 483 774 330 1778 -363 2379 -331 287 -748

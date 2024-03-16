@@ -17,7 +17,8 @@ import { http } from "viem";
 import { arbitrumSepolia, mainnet } from "viem/chains";
 import Routes from "@/Routes";
 import { Toaster } from "./components/ui/toaster";
-
+import DDMeshLogo from "./assets/ddmesh_logo.svg";
+import DDMeshLogoTransparent from "./assets/ddMesh_logo_token-transparent.svg.svg";
 const config = createConfig({
   chains: [mainnet, arbitrumSepolia],
   multiInjectedProviderDiscovery: false,
@@ -32,7 +33,8 @@ const queryClient = new QueryClient();
 function App() {
   const [count, setCount] = useState(0);
   return (
-    <div className={"container border-2"}>
+    <div className={"container"}>
+
       <DynamicContextProvider
         settings={{
           // Find your environment id at https://app.dynamic.xyz/dashboard/developer
@@ -58,7 +60,11 @@ function App() {
         <WagmiProvider config={config}>
           <QueryClientProvider client={queryClient}>
             <DynamicWagmiConnector>
-              <DynamicWidget />
+              <div className={"border-4 flex"}>
+                <img src={DDMeshLogo} className={"h-10"} />
+
+                <DynamicWidget buttonClassName={"ml-auto border-2"}/>
+              </div>
               <Routes />
               <Toaster />
             </DynamicWagmiConnector>
