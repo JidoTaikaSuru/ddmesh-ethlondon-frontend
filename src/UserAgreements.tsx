@@ -8,8 +8,8 @@ import { useEffect, useState } from "react";
 import { useChainId, useReadContract, useWriteContract } from "wagmi";
 import { getContracts } from "./config/contracts.config";
 
-import { abi as tokenAbi } from "./../contracts/Token.sol/DDMTOKEN.json";
-import { abi as ddmeshMarketAbi } from "./../contracts/DDMeshMarket.sol/DDMeshMarket.json";
+import { abi as tokenAbi } from "../contracts/Token.sol/DDMTOKEN.json";
+import { abi as ddmeshMarketAbi } from "../contracts/DDMeshMarket.sol/DDMeshMarket.json";
 
 import { ToastAction } from "@/components/ui/toast";
 import { useToast } from "@/components/ui/use-toast";
@@ -25,7 +25,28 @@ type Provider = {
   activeAgreements: bigint;
 };
 
-export const DbProviderOnboarding = () => {
+type Agreement = {
+  id: bigint; // or number, if within JS safe integer range
+  user: string; // Address as a string
+  userBalance: bigint; // or number
+  providerAddress: string; // Address as a string
+  providerId: bigint; // or number
+  providerClaimed: bigint; // or number
+  encConnectionString: string;
+  startTimeStamp: bigint; // or number, timestamp as number is usually safe
+  status: AgreementStatus;
+};
+
+enum AgreementStatus {
+  NONE,
+  ENTERED,
+  ACTIVE,
+  CLOSED,
+  REVOKED,
+  ERROR,
+}
+
+export const UserAgreements = () => {
   const { toast } = useToast();
   const [providerChoice, setProviderChoice] = useState<bigint>(BigInt(0));
 
@@ -76,19 +97,6 @@ export const DbProviderOnboarding = () => {
       });
     }
   }, [isApproveSuccess]);
-
-  // as soon as isEnterAgreementSuccess is true, we show a success message to the user
-  useEffect(() => {
-    if (isEnterAgreementSuccess && !isEnterAgreementError) {
-      console.log("Successfully entered agreement and paid");
-      toast({
-        title: "SuccessFully Paid For Agreement",
-        description: "Friday, February 10, 2023 at 5:57 PM",
-        action: <ToastAction altText="Goto schedule to undo">Undo</ToastAction>,
-        color: "success",
-      });
-    }
-  }, [isEnterAgreementSuccess]);
 
   const { data: providers } = useReadContract({
     address: ddmeshMarketAddress,
