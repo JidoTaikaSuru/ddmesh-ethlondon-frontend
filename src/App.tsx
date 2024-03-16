@@ -1,15 +1,36 @@
 import "./App.css";
 
+import { useState } from "react";
+
 import {
   DynamicContextProvider,
   DynamicWidget,
 } from "@dynamic-labs/sdk-react-core";
-import { DynamicWagmiConnector } from "@dynamic-labs/wagmi-connector";
 
 import { EthereumWalletConnectors } from "@dynamic-labs/ethereum";
+
+import { DynamicWagmiConnector } from "@dynamic-labs/wagmi-connector";
+import { createConfig, WagmiProvider } from "wagmi";
+
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { http } from "viem";
+import { arbitrumSepolia, mainnet } from "viem/chains";
 import Routes from "@/Routes";
+import { Toaster } from "./components/ui/toaster";
+
+const config = createConfig({
+  chains: [mainnet, arbitrumSepolia],
+  multiInjectedProviderDiscovery: false,
+  transports: {
+    1: http(),
+    421614: http(),
+  },
+});
+
+const queryClient = new QueryClient();
 
 function App() {
+  const [count, setCount] = useState(0);
   return (
     <div className={"container border-2"}>
       <DynamicContextProvider
@@ -34,10 +55,15 @@ function App() {
           ],
         }}
       >
-        <DynamicWagmiConnector>
-          <DynamicWidget />
-          <Routes />
-        </DynamicWagmiConnector>
+        <WagmiProvider config={config}>
+          <QueryClientProvider client={queryClient}>
+            <DynamicWagmiConnector>
+              <DynamicWidget />
+              <Routes />
+              <Toaster />
+            </DynamicWagmiConnector>
+          </QueryClientProvider>
+        </WagmiProvider>
       </DynamicContextProvider>
     </div>
   );
