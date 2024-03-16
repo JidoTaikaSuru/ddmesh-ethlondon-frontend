@@ -1,6 +1,6 @@
 import {Button} from "@/components/ui/button";
 import {useNavigate} from "react-router-dom";
-import DDMeshLogo from "./assets/ddmesh-logo.svg";
+import DDMeshLogo from "./assets/ddmesh-logo-fixed.svg";
 
 
 export default function Home() {

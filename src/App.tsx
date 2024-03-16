@@ -14,7 +14,7 @@ import {http} from "viem";
 import {arbitrumSepolia, mainnet} from "viem/chains";
 import Routes from "@/Routes";
 import {Toaster} from "./components/ui/toaster";
-import DDMeshLogo from "./assets/ddmesh-logo.svg";
+import DDMeshLogo from "./assets/ddmesh-logo-fixed.svg";
 import {Link} from "react-router-dom";
 
 const config = createConfig({
