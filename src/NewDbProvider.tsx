@@ -30,6 +30,8 @@ const formSchema = z.object({
 })
 
 
+//TODO this control is fucked, reports status for two distinct processes.
+// @Maarten, should we use toasts instead of rendering status in this way?
 const RenderNeonVerification: FC<{ status: string, error: string }> = ({status, error}) => {
     if (status === "error") {
         // TODO Fix the color here, use the tailwind color
@@ -48,6 +50,9 @@ const RenderNeonVerification: FC<{ status: string, error: string }> = ({status, 
     if (status === "complete") {
         // TODO Fix the color here, use the tailwind color
         return <p style={{color: "green"}}>Verified!</p>
+    }
+    if (status === "wipe_complete") {
+        return <p style={{color: "green"}}>Wiped all databases successfully!</p>
     }
     return <p></p>
 }
@@ -92,12 +97,41 @@ export const NewDbProvider = () => {
             }
             setNeonVerificationError("")
             setNeonVerificationStatus("complete")
+            //@Maarten, right here, at this point the user has been verified and we can continue with the next steps
+            // 1. Encrypt the apiKey with our public key: 0x1b6bB595fFD8a0dCDeac79f805d35c5101273F9a
+            // 2. approve() w/ max val just so we don't have to worry about it later (we'll require collateral/staking later)
+            // 3. Register the provider using the properties of "data", MAKE SURE THE API KEY IS ENCRYPTED IN THE PAYLOAD YOU PASS TO THE CONTRACT
             setStep(3)
         } catch (e: any) {
             console.error(e)
             setNeonVerificationStatus("error")
             setNeonVerificationError(e.message)
         }
+    }
+
+    const wipeAllNeonDatabases = async (apiKey: string) => {
+        console.log("User wants to start fresh in Neon, apiKey:", apiKey)
+        console.log("Doing basic checks against Neon...")
+        const neonClient = new NeonClient(apiKey)
+        setNeonVerificationStatus("pending")
+        try {
+            //Check if user has set up a project
+            const projectId = await neonClient.getFirstProjectId()
+            console.log("Found project id:", projectId)
+            //Check if user has set up a branch
+            const branchId = await neonClient.getFirstBranchId(projectId)
+            console.log("Found branch id:", branchId)
+            await neonClient.wipeAllDatabases(projectId, branchId)
+            //Check if user has set up a database
+            setNeonVerificationError("")
+            setNeonVerificationStatus("wipe_complete")
+        } catch (e: any) {
+            console.error(e)
+            setNeonVerificationStatus("error")
+            setNeonVerificationError(e.message)
+        }
+
+
     }
 
     return (<>
@@ -222,6 +256,8 @@ export const NewDbProvider = () => {
                                             <Button type="submit">Submit</Button>
                                         </form>
                                     </Form>
+                                    <Button onClick={() => wipeAllNeonDatabases(form.watch("apiKey"))} disabled={form.watch("apiKey") === ""}>Start Fresh</Button>
+
                                 </CardContent>)
                         } else if (step === 3) {
                             return (<CardContent className={"flex flex-col space-y-2"}>

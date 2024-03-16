@@ -58,4 +58,17 @@ export class NeonClient {
 
         return res.data.databases ? res.data.databases.length : 0
     }
+
+    async wipeAllDatabases(projectId: string, branchId: string) {
+        console.log(`${this.baseUrl}/projects/${projectId}/branches/${branchId}/databases`)
+        const databasesRes = await this.neonAxios.get(`/projects/${projectId}/branches/${branchId}/databases`, {
+            headers: this.headers,
+        });
+        for(const db of databasesRes.data.databases) {
+            await this.neonAxios.delete(`/projects/${projectId}/branches/${branchId}/databases/${db.name}`, {
+                headers: this.headers,
+            });
+        }
+        return ""
+    }
 }
