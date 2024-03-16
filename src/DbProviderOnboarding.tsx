@@ -1,18 +1,74 @@
-import { Card } from "@/components/ui/card.tsx";
-import { Checkbox } from "@/components/ui/checkbox.tsx";
-import Jazzicon, { jsNumberForAddress } from "react-jazzicon";
 import PostgresLogo from "@/assets/postgres.svg";
 import UsdcLogo from "@/assets/usdc.svg";
 import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
 import { useChainId, useReadContract, useWriteContract } from "wagmi";
 import { getContracts } from "./config/contracts.config";
+import {Button} from "@/components/ui/button";
+import * as React from "react";
+import {FC, useCallback, useEffect} from "react";
+import {useChainId, useWriteContract} from "wagmi";
+import {getContracts} from "./config/contracts.config";
 
-import { abi as tokenAbi } from "./../contracts/Token.sol/DDMTOKEN.json";
-import { abi as ddmeshMarketAbi } from "./../contracts/DDMeshMarket.sol/DDMeshMarket.json";
+import {abi as tokenAbi} from "./../contracts/Token.sol/DDMTOKEN.json";
+import {abi as ddmeshMarketAbi} from "./../contracts/DDMeshMarket.sol/DDMeshMarket.json";
 
-import { ToastAction } from "@/components/ui/toast";
-import { useToast } from "@/components/ui/use-toast";
+import {ToastAction} from "@/components/ui/toast";
+import {useToast} from "@/components/ui/use-toast";
+
+import {flexRender, useReactTable,} from "@tanstack/react-table"
+
+import {
+    ColumnDef,
+    ColumnFiltersState,
+    getCoreRowModel,
+    getFilteredRowModel,
+    getPaginationRowModel,
+    getSortedRowModel,
+    SortingState,
+    VisibilityState,
+} from "@tanstack/table-core"
+
+import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow,} from "@/components/ui/table"
+import ddMeshLogo from "@/assets/ddmesh-logo.svg";
+
+const data: Provider[] = [
+    {
+        id: "derv1ws0",
+        storagePrice: "$50/mo",
+        name: "One",
+        description: "500gb 2vcore",
+        tvl: "$10 TVL",
+    },
+    {
+        id: "5kma53ae",
+        storagePrice: "$5/mo",
+        name: "Two",
+        description: "0.5gb 0.2",
+        tvl: "$50 TVL",
+    },
+    {
+        id: "bhqecj4p",
+        storagePrice: "$14/mo",
+        name: "Three",
+        description: "200gb serverless",
+        tvl: "$136 TVL",
+    },
+]
+
+export type Provider = {
+    id: string
+    storagePrice: string
+    name: string
+    description: string
+    tvl: string
+}
+
+const ddmValue: number = 0.1;
+
+const CenterAlignedHeader: FC<{ header: string }> = ({header}) => (
+    <div className="capitalize text-center">{header}</div>
+)
 
 type Provider = {
   id: bigint;
@@ -31,31 +87,137 @@ export const DbProviderOnboarding = () => {
 
   const chainId = useChainId();
 
-  const tokenAddress = getContracts(chainId).token as `0x${string}`;
-  const ddmeshMarketAddress = getContracts(chainId)
-    .ddmeshMarket as `0x${string}`;
-  console.log("ddmeshMarketAddress", ddmeshMarketAddress);
+//@ts-ignore
+    const tokenAddress = getContracts(chainId).token as `0x${string}`;
+    //@ts-ignore
+    const ddmeshMarketAddress = getContracts(chainId)
+        .ddmeshMarket as `0x${string}`;
+    console.log("ddmeshMarketAddress", ddmeshMarketAddress);
 
   const {
     isPending: isPendingApprove,
     writeContract: writeContractApprove,
     isSuccess: isApproveSuccess,
   } = useWriteContract();
+    const [sorting, setSorting] = React.useState<SortingState>([])
+    const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
+        []
+    )
+    const [columnVisibility, setColumnVisibility] =
+        React.useState<VisibilityState>({})
+    const [rowSelection, setRowSelection] = React.useState({})
 
-  const {
-    writeContract: writeContractEnterAgreement,
+    const columns: ColumnDef<Provider>[] = [
+        {
+            accessorKey: "storagePrice",
+            header: () => {
+                return <CenterAlignedHeader header="Storage Price"/>
+            },
+            cell: ({row}: any) => (
+                <div className={"flex-col items-middle"}>
+                    <p className={"text-lg flex"}>
+                        {row.getValue("storagePrice")}
+                    </p>
+                    <div className={"flex items-center space-x-1"}>
+                        <img className={"h-5"} src={ddMeshLogo}/>
+                        <p className={"text-lg flex"}>
+                            {ddmValue} DMM/mo
+                        </p>
+                    </div>
+                </div>
+            ),
+        },
+        {
+            accessorKey: "dataProvider",
+            header: () => {
+                return <CenterAlignedHeader header="Data Provider"/>
+            },
+            cell: () => (
+                <div className={"flex items-middle justify-center"}>
+                    <img style={{height: 50}} src={PostgresLogo}/>
+                </div>
+            ),
+        },
+        {
+            accessorKey: "name",
+            header: () => {
+                return <CenterAlignedHeader header="Name"/>
+            },
+            cell: ({row}: any) => (
+                <div className="capitalize">{row.getValue("name")}</div>
+            ),
+        },
+        {
+            accessorKey: "description",
+            header: () => {
+                return <CenterAlignedHeader header="Description"/>
+            },
+            cell: ({row}: any) => (
+                <div className="capitalize">{row.getValue("description")}</div>
+            ),
+        },
+        {
+            accessorKey: "tvl",
+            header: () => {
+                return <CenterAlignedHeader header="TVL"/>
+            },
+            cell: ({row}: any) => (
+                <div className="capitalize">{row.getValue("tvl")}</div>
+            ),
+        },
+        {
+            accessorKey: "button",
+            header: () => {
+                return <CenterAlignedHeader header="Deploy"/>
+            },
+            cell: () => (
+                <div>
+                    <Button onClick={() => onDeploy()}>Deploy</Button>
+                </div>
+            )
+        }
+    ]
+
+    const table = useReactTable({
+        data,
+        columns,
+        onSortingChange: setSorting,
+        onColumnFiltersChange: setColumnFilters,
+        getCoreRowModel: getCoreRowModel(),
+        getPaginationRowModel: getPaginationRowModel(),
+        getSortedRowModel: getSortedRowModel(),
+        getFilteredRowModel: getFilteredRowModel(),
+        onColumnVisibilityChange: setColumnVisibility,
+        onRowSelectionChange: setRowSelection,
+        state: {
+            sorting,
+            columnFilters,
+            columnVisibility,
+            rowSelection,
+        },
+    })
+
+    const {
+        isPending: isPendingApprove,
+        writeContract: writeContractApprove,
+        isSuccess: isApproveSuccess,
+    } = useWriteContract();
+
+    const {
+        writeContract: writeContractEnterAgreement,
     isSuccess: isEnterAgreementSuccess,
     isError: isEnterAgreementError,
   } = useWriteContract();
 
-  const onDeploy = async () => {
-    writeContractApprove({
-      address: tokenAddress,
-      abi: tokenAbi,
-      functionName: "approve",
-      args: [ddmeshMarketAddress, BigInt(1)],
-    });
-  };
+    const onDeploy = async () => {
+        //@ts-ignore
+        writeContractApprove({
+            address: tokenAddress,
+            abi: tokenAbi,
+            functionName: "approve",
+            args: [ddmeshMarketAddress, BigInt(1)],
+        });
+    };
 
   useEffect(() => {
     if (
@@ -77,73 +239,104 @@ export const DbProviderOnboarding = () => {
     }
   }, [isApproveSuccess]);
 
-  // as soon as isEnterAgreementSuccess is true, we show a success message to the user
-  useEffect(() => {
-    if (isEnterAgreementSuccess && !isEnterAgreementError) {
-      console.log("Successfully entered agreement and paid");
-      toast({
-        title: "SuccessFully Paid For Agreement",
-        description: "Friday, February 10, 2023 at 5:57 PM",
-        action: <ToastAction altText="Goto schedule to undo">Undo</ToastAction>,
-        color: "success",
-      });
-    }
-  }, [isEnterAgreementSuccess]);
+    // as soon as isEnterAgreementSuccess is true, we show a success message to the user
+    useEffect(() => {
+        if (isEnterAgreementSuccess && !isEnterAgreementError) {
+            console.log("Successfully entered agreement and paid");
+            toast({
+                title: "SuccessFully Paid For Agreement",
+                description: "Friday, February 10, 2023 at 5:57 PM",
+                action: <ToastAction altText="Goto schedule to undo">Undo</ToastAction>,
+            });
+        }
+    }, [isEnterAgreementSuccess]);
 
-  const { data: providers } = useReadContract({
+    const { data: providers } = useReadContract({
     address: ddmeshMarketAddress,
     abi: ddmeshMarketAbi,
-    functionName: "getAllProviders",
+        functionName: "getAllProviders",
     args: [],
   });
 
-  return (
-    <>
-      <h1 className={"text-3xl"}>Data Providers</h1>
-      <div>
-        {(providers as Provider[]) &&
-          providers?.map((provider: Provider, index: number) => {
-            return (
-              <Card className={"p-4 flex items-center leading-4 gap-x-2"}>
-                <Checkbox style={{ height: 30, width: 30 }} />
-                <Jazzicon
-                  diameter={60}
-                  seed={jsNumberForAddress(provider.pAddress)}
-                />
-                <p className={"text-xl"}>{provider.ensName}</p>
-                <div className={"flex-col"}>
-                  <p className={"text-sm"}>Rank</p>
-                  <p className={"text-xl"}>#{index + 1}</p>
+    return (
+        <>
+            <div className="rounded-md border">
+                <Table>
+                    <TableHeader>
+                        {table.getHeaderGroups().map((headerGroup) => (
+                            <TableRow key={headerGroup.id}>
+                                {headerGroup.headers.map((header) => {
+                                    return (
+                                        <TableHead
+                                            key={header.id}
+                                            className="[&:has([role=checkbox])]:pl-3"
+                                        >
+                                            {header.isPlaceholder
+                                                ? null
+                                                : flexRender(
+                                                    header.column.columnDef.header,
+                                                    header.getContext()
+                                                )}
+                                        </TableHead>
+                                    )
+                                })}
+                            </TableRow>
+                        ))}
+                    </TableHeader>
+                    <TableBody>
+                        {table.getRowModel().rows?.length ? (
+                            table.getRowModel().rows.map((row) => (
+                                <TableRow
+                                    key={row.id}
+                                    data-state={row.getIsSelected() && "selected"}
+                                >
+                                    {row.getVisibleCells().map((cell) => (
+                                        <TableCell
+                                            key={cell.id}
+                                            className="[&:has([role=checkbox])]:pl-3"
+                                        >
+                                            {flexRender(
+                                                cell.column.columnDef.cell,
+                                                cell.getContext()
+                                            )}
+                                        </TableCell>
+                                    ))}
+                                </TableRow>
+                            ))
+                        ) : (
+                            <TableRow>
+                                <TableCell
+                                    colSpan={columns.length}
+                                    className="h-24 text-center"
+                                >
+                                    No results.
+                                </TableCell>
+                            </TableRow>
+                        )}
+                    </TableBody>
+                </Table>
+
+                <div className="flex items-center justify-end space-x-2 pt-4">
+                    <div className="flex-1 text-sm text-muted-foreground">
+                        <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => table.previousPage()}
+                            disabled={!table.getCanPreviousPage()}
+                        >
+                            Previous
+                        </Button>
+                        <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => table.nextPage()}
+                            disabled={!table.getCanNextPage()}
+                        >
+                            Next
+                        </Button>
+                    </div>
                 </div>
-                <div className={"flex-col align-middle justify-center"}>
-                  <p className={"text-sm"}>Database</p>
-                  <img style={{ height: 25 }} src={PostgresLogo} />
-                </div>
-                <div className={"flex-col"}>
-                  <p className={"text-sm"}>Storage Available</p>
-                  <p className={"text-xl"}>100GB</p>
-                </div>
-                <div className={"flex-col"}>
-                  <p className={"text-sm"}>Storage Price</p>
-                  <p className={"text-xl flex"}>
-                    <img className={"h-5"} src={UsdcLogo} />
-                    <p>0.001/min</p>
-                  </p>
-                </div>
-                <div>
-                  <Button
-                    onClick={() => {
-                      setProviderChoice(provider.id);
-                      onDeploy();
-                    }}
-                  >
-                    Deploy
-                  </Button>
-                </div>
-              </Card>
-            );
-          })}
-      </div>
-    </>
-  );
+            </div>
+        </>
+    );
 };
