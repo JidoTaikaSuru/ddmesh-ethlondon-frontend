@@ -7,8 +7,8 @@ const contracts = {
     ddmeshMarket: "",
   },
   421614: {
-    token: "0x601c2f884f68308c64d662bb6073e108955e3ed7",
-    ddmeshMarket: "0xDb5DBA8dd7672D01E3B1199Abd0C718146B67997",
+    token: "0x15223Dee9891d84609889798bb63ADe5e1FDcB15",
+    ddmeshMarket: "0x3219cCDB1386325b9a5C46e2a6aBA2e3FF45cEf8",
   },
 };
 
