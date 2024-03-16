@@ -1,6 +1,5 @@
 import PostgresLogo from "@/assets/postgres.svg";
 import { Button } from "@/components/ui/button";
-import { useNavigate } from "react-router-dom";
 import {FC, useCallback, useEffect} from "react";
 import { useChainId, useWriteContract } from "wagmi";
 import { getContracts } from "./config/contracts.config";
@@ -13,6 +12,10 @@ import { useToast } from "@/components/ui/use-toast";
 import * as React from "react";
 
 import {
+  ColumnDef,
+  ColumnFiltersState,
+  SortingState,
+  VisibilityState,
   flexRender,
   useReactTable,
 } from "@tanstack/react-table"
@@ -71,77 +74,8 @@ const ddmValue : number = 0.1;
 const CenterAlignedHeader: FC<{header: string}> = ({ header }) => (
     <div className="capitalize text-center">{header}</div>
 )
-export const columns: ColumnDef<Provider>[] = [
-  {
-    accessorKey: "storagePrice",
-    header: () => {
-      return <CenterAlignedHeader header="Storage Price" />
-    },
-    cell: ({ row }) => (
-        <div className={"flex-col"}>
-          <p className={"text-lg flex"}>
-            {row.getValue("storagePrice")}
-          </p>
-          <p className={"text-lg flex"}>
-            <img className={"h-5"} src={ddMeshLogo} /> {ddmValue} DMM/mo
-          </p>
-        </div>
-    ),
-  },
-  {
-    accessorKey: "dataProvider",
-    header: () => {
-      return <CenterAlignedHeader header="Data Provider" />
-    },
-    cell: ({ row }) => (
-        <div className={"flex items-middle justify-center"}>
-          <img style={{ height: 50 }} src={PostgresLogo} />
-        </div>
-    ),
-  },
-  {
-    accessorKey: "name",
-    header: () => {
-      return <CenterAlignedHeader header="Name" />
-    },
-    cell: ({ row }) => (
-        <div className="capitalize">{row.getValue("name")}</div>
-    ),
-  },
-  {
-    accessorKey: "description",
-    header: () => {
-      return <CenterAlignedHeader header="Description" />
-    },
-    cell: ({ row }) => (
-        <div className="capitalize">{row.getValue("description")}</div>
-    ),
-  },
-  {
-    accessorKey: "tvl",
-    header: () => {
-      return <CenterAlignedHeader header="TVL" />
-    },
-    cell: ({ row }) => (
-        <div className="capitalize">{row.getValue("tvl")}</div>
-    ),
-  },
-  {
-    accessorKey: "button",
-    header: () => {
-      return <CenterAlignedHeader header="Deploy" />
-    },
-    cell: ({row}) => (
-        <div>
-          <Button onClick={() => onDeploy()}>Deploy</Button>
-        </div>
-    )
-  }
-]
 
 export const DbProviderOnboarding = () => {
-  const navigate = useNavigate();
-
   const { toast } = useToast();
 
   const chainId = useChainId();
@@ -160,6 +94,74 @@ export const DbProviderOnboarding = () => {
   const [columnVisibility, setColumnVisibility] =
       React.useState<VisibilityState>({})
   const [rowSelection, setRowSelection] = React.useState({})
+
+  const columns: ColumnDef<Provider>[] = [
+    {
+      accessorKey: "storagePrice",
+      header: () => {
+        return <CenterAlignedHeader header="Storage Price" />
+      },
+      cell: ({ row } : any) => (
+          <div className={"flex-col"}>
+            <p className={"text-lg flex"}>
+              {row.getValue("storagePrice")}
+            </p>
+            <p className={"text-lg flex"}>
+              <img className={"h-5"} src={ddMeshLogo} /> {ddmValue} DMM/mo
+            </p>
+          </div>
+      ),
+    },
+    {
+      accessorKey: "dataProvider",
+      header: () => {
+        return <CenterAlignedHeader header="Data Provider" />
+      },
+      cell: () => (
+          <div className={"flex items-middle justify-center"}>
+            <img style={{ height: 50 }} src={PostgresLogo} />
+          </div>
+      ),
+    },
+    {
+      accessorKey: "name",
+      header: () => {
+        return <CenterAlignedHeader header="Name" />
+      },
+      cell: ({ row } : any) => (
+          <div className="capitalize">{row.getValue("name")}</div>
+      ),
+    },
+    {
+      accessorKey: "description",
+      header: () => {
+        return <CenterAlignedHeader header="Description" />
+      },
+      cell: ({ row } : any) => (
+          <div className="capitalize">{row.getValue("description")}</div>
+      ),
+    },
+    {
+      accessorKey: "tvl",
+      header: () => {
+        return <CenterAlignedHeader header="TVL" />
+      },
+      cell: ({ row } : any) => (
+          <div className="capitalize">{row.getValue("tvl")}</div>
+      ),
+    },
+    {
+      accessorKey: "button",
+      header: () => {
+        return <CenterAlignedHeader header="Deploy" />
+      },
+      cell: () => (
+          <div>
+            <Button onClick={() => onDeploy()}>Deploy</Button>
+          </div>
+      )
+    }
+  ]
 
   const table = useReactTable({
     data,
@@ -181,7 +183,6 @@ export const DbProviderOnboarding = () => {
   })
 
   const {
-    data: hash,
     isPending: isPendingApprove,
     writeContract: writeContractApprove,
     isSuccess: isApproveSuccess,

@@ -1,7 +1,5 @@
 import "./App.css";
 
-import {useState} from "react";
-
 import {DynamicContextProvider, DynamicWidget,} from "@dynamic-labs/sdk-react-core";
 
 import {EthereumWalletConnectors} from "@dynamic-labs/ethereum";
@@ -15,7 +13,7 @@ import {arbitrumSepolia, mainnet} from "viem/chains";
 import Routes from "@/Routes";
 import {Toaster} from "./components/ui/toaster";
 import DDMeshLogo from "./assets/ddmesh-logo.svg";
-import {Link, useNavigate} from "react-router-dom";
+import {Link} from "react-router-dom";
 
 const config = createConfig({
     chains: [mainnet, arbitrumSepolia],
@@ -29,8 +27,7 @@ const config = createConfig({
 const queryClient = new QueryClient();
 
 function App() {
-    const [count, setCount] = useState(0);
-    const navigate = useNavigate()
+
     return (
         <div className={"container"}>
 
