@@ -12,15 +12,15 @@ import { useToast } from "@/components/ui/use-toast";
 import * as React from "react";
 
 import {
-  ColumnDef,
-  ColumnFiltersState,
-  SortingState,
-  VisibilityState,
   flexRender,
   useReactTable,
 } from "@tanstack/react-table"
 
 import {
+  ColumnDef,
+  ColumnFiltersState,
+  SortingState,
+  VisibilityState,
   getCoreRowModel,
   getFilteredRowModel,
   getPaginationRowModel,
