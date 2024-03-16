@@ -2,7 +2,7 @@ import PostgresLogo from "@/assets/postgres.svg";
 import UsdcLogo from "@/assets/usdc.svg";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
-import { useCallback, useEffect } from "react";
+import {FC, useCallback, useEffect} from "react";
 import { useChainId, useWriteContract } from "wagmi";
 import { getContracts } from "./config/contracts.config";
 
@@ -69,23 +69,21 @@ export type Provider = {
 
 const ddmValue : number = 0.1;
 
+const CenterAlignedHeader: FC<{header: string}> = ({ header }) => (
+    <div className="capitalize text-center">{header}</div>
+)
 export const columns: ColumnDef<Provider>[] = [
   {
-    id: "id",
-    header: "",
-    cell: ({ row }) => (
-        <img className={"h-5"} src={UsdcLogo} />
-    ),
-  },
-  {
     accessorKey: "storagePrice",
-    header: "Storage Price",
+    header: () => {
+      return <CenterAlignedHeader header="Storage Price" />
+    },
     cell: ({ row }) => (
         <div className={"flex-col"}>
-          <p className={"text-xl flex"}>
+          <p className={"text-lg flex"}>
             <p>{row.getValue("storagePrice")}</p>
           </p>
-          <p className={"text-xl flex"}>
+          <p className={"text-lg flex"}>
             <p>{ddmValue} DMM/mo</p>
           </p>
         </div>
@@ -93,37 +91,47 @@ export const columns: ColumnDef<Provider>[] = [
   },
   {
     accessorKey: "dataProvider",
-    header: "Data Provider",
+    header: () => {
+      return <CenterAlignedHeader header="Data Provider" />
+    },
     cell: ({ row }) => (
-        <div className={"flex-col align-middle justify-center"}>
-          <img style={{ height: 25 }} src={PostgresLogo} />
+        <div className={"flex items-middle justify-center"}>
+          <img style={{ height: 50 }} src={PostgresLogo} />
         </div>
     ),
   },
   {
     accessorKey: "name",
-    header: "Name",
+    header: () => {
+      return <CenterAlignedHeader header="Name" />
+    },
     cell: ({ row }) => (
         <div className="capitalize">{row.getValue("name")}</div>
     ),
   },
   {
     accessorKey: "description",
-    header: "Description",
+    header: () => {
+      return <CenterAlignedHeader header="Description" />
+    },
     cell: ({ row }) => (
         <div className="capitalize">{row.getValue("description")}</div>
     ),
   },
   {
     accessorKey: "tvl",
-    header: "TVL",
+    header: () => {
+      return <CenterAlignedHeader header="TVL" />
+    },
     cell: ({ row }) => (
         <div className="capitalize">{row.getValue("tvl")}</div>
     ),
   },
   {
     accessorKey: "button",
-    header: "",
+    header: () => {
+      return <CenterAlignedHeader header="Deploy" />
+    },
     cell: ({row}) => (
         <div>
           <Button onClick={() => onDeploy()}>Deploy</Button>
