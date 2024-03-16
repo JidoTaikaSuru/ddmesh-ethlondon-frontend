@@ -1,13 +1,8 @@
 import PostgresLogo from "@/assets/postgres.svg";
-import UsdcLogo from "@/assets/usdc.svg";
-import { Button } from "@/components/ui/button";
-import { useEffect, useState } from "react";
-import { useChainId, useReadContract, useWriteContract } from "wagmi";
-import { getContracts } from "./config/contracts.config";
 import {Button} from "@/components/ui/button";
 import * as React from "react";
-import {FC, useCallback, useEffect} from "react";
-import {useChainId, useWriteContract} from "wagmi";
+import {FC, useEffect, useState} from "react";
+import {useChainId, useReadContract, useWriteContract} from "wagmi";
 import {getContracts} from "./config/contracts.config";
 
 import {abi as tokenAbi} from "./../contracts/Token.sol/DDMTOKEN.json";
@@ -31,74 +26,37 @@ import {
 
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow,} from "@/components/ui/table"
 import ddMeshLogo from "@/assets/ddmesh-logo.svg";
+import {hardcodedDDMToUsdFee} from "@/common.tsx";
 
-const data: Provider[] = [
-    {
-        id: "derv1ws0",
-        storagePrice: "$50/mo",
-        name: "One",
-        description: "500gb 2vcore",
-        tvl: "$10 TVL",
-    },
-    {
-        id: "5kma53ae",
-        storagePrice: "$5/mo",
-        name: "Two",
-        description: "0.5gb 0.2",
-        tvl: "$50 TVL",
-    },
-    {
-        id: "bhqecj4p",
-        storagePrice: "$14/mo",
-        name: "Three",
-        description: "200gb serverless",
-        tvl: "$136 TVL",
-    },
-]
 
-export type Provider = {
-    id: string
-    storagePrice: string
-    name: string
-    description: string
-    tvl: string
-}
+type Provider = {
+    id: bigint;
+    pAddress: string;
+    fee: bigint; // DDM Tokens
+    encApiKey: string;
+    ensName: string;
+    description: string;
+    noOfDbAgreements: bigint;
+    activeAgreements: bigint;
+};
 
-const ddmValue: number = 0.1;
 
 const CenterAlignedHeader: FC<{ header: string }> = ({header}) => (
     <div className="capitalize text-center">{header}</div>
 )
 
-type Provider = {
-  id: bigint;
-  pAddress: string;
-  fee: bigint; // DDM Tokens
-  encApiKey: string;
-  ensName: string;
-  description: string;
-  noOfDbAgreements: bigint;
-  activeAgreements: bigint;
-};
 
 export const DbProviderOnboarding = () => {
-  const { toast } = useToast();
-  const [providerChoice, setProviderChoice] = useState<bigint>(BigInt(0));
+    const {toast} = useToast();
+    const [providerChoice,] = useState<bigint>(BigInt(0));
 
-  const chainId = useChainId();
+    const chainId = useChainId();
 
-//@ts-ignore
     const tokenAddress = getContracts(chainId).token as `0x${string}`;
-    //@ts-ignore
     const ddmeshMarketAddress = getContracts(chainId)
         .ddmeshMarket as `0x${string}`;
     console.log("ddmeshMarketAddress", ddmeshMarketAddress);
 
-  const {
-    isPending: isPendingApprove,
-    writeContract: writeContractApprove,
-    isSuccess: isApproveSuccess,
-  } = useWriteContract();
     const [sorting, setSorting] = React.useState<SortingState>([])
     const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
         []
@@ -116,12 +74,12 @@ export const DbProviderOnboarding = () => {
             cell: ({row}: any) => (
                 <div className={"flex-col items-middle"}>
                     <p className={"text-lg flex"}>
-                        {row.getValue("storagePrice")}
+                        {hardcodedDDMToUsdFee()}
                     </p>
                     <div className={"flex items-center space-x-1"}>
                         <img className={"h-5"} src={ddMeshLogo}/>
                         <p className={"text-lg flex"}>
-                            {ddmValue} DMM/mo
+                            {row.getValue("fee")} DMM/mo
                         </p>
                     </div>
                 </div>
@@ -139,23 +97,23 @@ export const DbProviderOnboarding = () => {
             ),
         },
         {
-            accessorKey: "name",
-            header: () => {
-                return <CenterAlignedHeader header="Name"/>
-            },
-            cell: ({row}: any) => (
-                <div className="capitalize">{row.getValue("name")}</div>
-            ),
-        },
-        {
             accessorKey: "description",
             header: () => {
-                return <CenterAlignedHeader header="Description"/>
+                return <CenterAlignedHeader header="Name"/>
             },
             cell: ({row}: any) => (
                 <div className="capitalize">{row.getValue("description")}</div>
             ),
         },
+        // {
+        //     accessorKey: "description",
+        //     header: () => {
+        //         return <CenterAlignedHeader header="Description"/>
+        //     },
+        //     cell: ({row}: any) => (
+        //         <div className="capitalize">{row.getValue("description")}</div>
+        //     ),
+        // },
         {
             accessorKey: "tvl",
             header: () => {
@@ -178,8 +136,85 @@ export const DbProviderOnboarding = () => {
         }
     ]
 
+
+    const {
+        isPending: isPendingApprove,
+        writeContract: writeContractApprove,
+        isSuccess: isApproveSuccess,
+    } = useWriteContract();
+
+    const {
+        writeContract: writeContractEnterAgreement,
+        isSuccess: isEnterAgreementSuccess,
+        isError: isEnterAgreementError,
+    } = useWriteContract();
+
+    const onDeploy = async () => {
+        //@ts-ignore
+        writeContractApprove({
+            address: tokenAddress,
+            abi: tokenAbi,
+            functionName: "approve",
+            args: [ddmeshMarketAddress, BigInt(1)],
+        });
+    };
+
+    useEffect(() => {
+        if (
+            isApproveSuccess &&
+            !isPendingApprove &&
+            !isEnterAgreementError &&
+            !isEnterAgreementSuccess
+        ) {
+            console.log(
+                "Approve success, entering agreement now. providerChoice: ",
+                providerChoice
+            );
+            writeContractEnterAgreement({
+                address: ddmeshMarketAddress,
+                abi: ddmeshMarketAbi,
+                functionName: "enterAgreement",
+                args: [providerChoice, BigInt(1)],
+            });
+        }
+    }, [isApproveSuccess]);
+
+    // as soon as isEnterAgreementSuccess is true, we show a success message to the user
+    useEffect(() => {
+        if (isEnterAgreementSuccess && !isEnterAgreementError) {
+            console.log("Successfully entered agreement and paid");
+            toast({
+                title: "SuccessFully Paid For Agreement",
+                description: "Friday, February 10, 2023 at 5:57 PM",
+                action: <ToastAction altText="Goto schedule to undo">Undo</ToastAction>,
+            });
+        }
+    }, [isEnterAgreementSuccess]);
+
+    const {data: providers} = useReadContract({
+        address: ddmeshMarketAddress,
+        abi: ddmeshMarketAbi,
+        functionName: "getAllProviders",
+        args: [],
+    });
+    const {data: tvls} = useReadContract({
+        address: ddmeshMarketAddress,
+        abi: ddmeshMarketAbi,
+        functionName: "getProviderTVLs",
+        args: [],
+    });
+
+
+    useEffect(() => {
+        console.log("useEffect providers", providers)
+    }, [providers]);
+    console.log("chainId", chainId)
+    console.log("abi", ddmeshMarketAbi);
+
+
     const table = useReactTable({
-        data,
+        data: providers as Provider[] || [],
+        //@ts-ignore
         columns,
         onSortingChange: setSorting,
         onColumnFiltersChange: setColumnFilters,
@@ -196,67 +231,8 @@ export const DbProviderOnboarding = () => {
             rowSelection,
         },
     })
-
-    const {
-        isPending: isPendingApprove,
-        writeContract: writeContractApprove,
-        isSuccess: isApproveSuccess,
-    } = useWriteContract();
-
-    const {
-        writeContract: writeContractEnterAgreement,
-    isSuccess: isEnterAgreementSuccess,
-    isError: isEnterAgreementError,
-  } = useWriteContract();
-
-    const onDeploy = async () => {
-        //@ts-ignore
-        writeContractApprove({
-            address: tokenAddress,
-            abi: tokenAbi,
-            functionName: "approve",
-            args: [ddmeshMarketAddress, BigInt(1)],
-        });
-    };
-
-  useEffect(() => {
-    if (
-      isApproveSuccess &&
-      !isPendingApprove &&
-      !isEnterAgreementError &&
-      !isEnterAgreementSuccess
-    ) {
-      console.log(
-        "Approve success, entering agreement now. providerChoice: ",
-        providerChoice
-      );
-      writeContractEnterAgreement({
-        address: ddmeshMarketAddress,
-        abi: ddmeshMarketAbi,
-        functionName: "enterAgreement",
-        args: [providerChoice, BigInt(1)],
-      });
-    }
-  }, [isApproveSuccess]);
-
-    // as soon as isEnterAgreementSuccess is true, we show a success message to the user
-    useEffect(() => {
-        if (isEnterAgreementSuccess && !isEnterAgreementError) {
-            console.log("Successfully entered agreement and paid");
-            toast({
-                title: "SuccessFully Paid For Agreement",
-                description: "Friday, February 10, 2023 at 5:57 PM",
-                action: <ToastAction altText="Goto schedule to undo">Undo</ToastAction>,
-            });
-        }
-    }, [isEnterAgreementSuccess]);
-
-    const { data: providers } = useReadContract({
-    address: ddmeshMarketAddress,
-    abi: ddmeshMarketAbi,
-        functionName: "getAllProviders",
-    args: [],
-  });
+    console.log("providers", providers)
+    console.log("tvl", tvls)
 
     return (
         <>

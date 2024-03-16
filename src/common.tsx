@@ -25,3 +25,5 @@ export const RenderMESHInMonth: FC<{perMinuteFee: number}> = ({perMinuteFee}) =>
         <div>{(perMinuteFee * ONE_MONTH).toFixed(2)} MESH</div>
     </div>
 }
+
+export const hardcodedDDMToUsdFee = () => 50
