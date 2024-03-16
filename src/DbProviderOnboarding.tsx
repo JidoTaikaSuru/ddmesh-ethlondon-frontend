@@ -13,15 +13,7 @@ import { useToast } from "@/components/ui/use-toast";
 import * as React from "react";
 
 import {
-  ColumnDef,
-  ColumnFiltersState,
-  SortingState,
-  VisibilityState,
   flexRender,
-  getCoreRowModel,
-  getFilteredRowModel,
-  getPaginationRowModel,
-  getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table"
 
@@ -146,7 +138,10 @@ export const DbProviderOnboarding = () => {
   const { toast } = useToast();
 
   const chainId = useChainId();
+
+  //@ts-ignore
   const tokenAddress = getContracts(chainId).token as `0x${string}`;
+  //@ts-ignore
   const ddmeshMarketAddress = getContracts(chainId)
     .ddmeshMarket as `0x${string}`;
   console.log("ddmeshMarketAddress", ddmeshMarketAddress);
@@ -164,10 +159,6 @@ export const DbProviderOnboarding = () => {
     columns,
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
-    getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
     onColumnVisibilityChange: setColumnVisibility,
     onRowSelectionChange: setRowSelection,
     state: {
@@ -194,6 +185,7 @@ export const DbProviderOnboarding = () => {
   } = useWriteContract();
 
   const onDeploy = async () => {
+    //@ts-ignore
     writeContractApprove({
       address: tokenAddress,
       abi: tokenAbi,
@@ -209,6 +201,7 @@ export const DbProviderOnboarding = () => {
       !isEnterAgreementError &&
       !isEnterAgreementSuccess
     ) {
+      //@ts-ignore
       writeContractEnterAgreement({
         address: ddmeshMarketAddress,
         abi: ddmeshMarketAbi,
@@ -226,7 +219,6 @@ export const DbProviderOnboarding = () => {
         title: "SuccessFully Paid For Agreement",
         description: "Friday, February 10, 2023 at 5:57 PM",
         action: <ToastAction altText="Goto schedule to undo">Undo</ToastAction>,
-        color: "success",
       });
     }
   }, [isEnterAgreementSuccess]);
