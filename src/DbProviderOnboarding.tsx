@@ -1,6 +1,3 @@
-import { Card } from "@/components/ui/card.tsx";
-import { Checkbox } from "@/components/ui/checkbox.tsx";
-import Jazzicon, { jsNumberForAddress } from "react-jazzicon";
 import PostgresLogo from "@/assets/postgres.svg";
 import UsdcLogo from "@/assets/usdc.svg";
 import { Button } from "@/components/ui/button";
@@ -70,17 +67,14 @@ export type Provider = {
   tvl: string
 }
 
+const ddmValue : number = 0.1;
+
 export const columns: ColumnDef<Provider>[] = [
   {
     id: "id",
     header: "",
     cell: ({ row }) => (
-        <Jazzicon
-            diameter={60}
-            seed={jsNumberForAddress(
-                "0x1111111111111111111111111111111111111111"
-            )}
-        />
+        <img className={"h-5"} src={UsdcLogo} />
     ),
   },
   {
@@ -89,8 +83,10 @@ export const columns: ColumnDef<Provider>[] = [
     cell: ({ row }) => (
         <div className={"flex-col"}>
           <p className={"text-xl flex"}>
-            <img className={"h-5"} src={UsdcLogo} />
             <p>{row.getValue("storagePrice")}</p>
+          </p>
+          <p className={"text-xl flex"}>
+            <p>{ddmValue} DMM/mo</p>
           </p>
         </div>
     ),
