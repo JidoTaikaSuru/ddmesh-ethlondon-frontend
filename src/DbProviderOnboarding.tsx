@@ -1,5 +1,4 @@
 import PostgresLogo from "@/assets/postgres.svg";
-import UsdcLogo from "@/assets/usdc.svg";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import {FC, useCallback, useEffect} from "react";
@@ -34,6 +33,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
+import ddMeshLogo from "@/assets/ddmesh-logo.svg";
 
 const data: Provider[] = [
   {
@@ -81,10 +81,10 @@ export const columns: ColumnDef<Provider>[] = [
     cell: ({ row }) => (
         <div className={"flex-col"}>
           <p className={"text-lg flex"}>
-            <p>{row.getValue("storagePrice")}</p>
+            {row.getValue("storagePrice")}
           </p>
           <p className={"text-lg flex"}>
-            <p>{ddmValue} DMM/mo</p>
+            <img className={"h-5"} src={ddMeshLogo} /> {ddmValue} DMM/mo
           </p>
         </div>
     ),
