@@ -1,3 +1,5 @@
+//@ts-ignore
+
 import "./App.css";
 
 import {DynamicContextProvider, DynamicWidget,} from "@dynamic-labs/sdk-react-core";
@@ -31,26 +33,12 @@ function App() {
     return (
         <div className={"container"}>
 
+            {/*@ts-ignore*/}
             <DynamicContextProvider
                 settings={{
                     // Find your environment id at https://app.dynamic.xyz/dashboard/developer
                     environmentId: "95ae4a76-ade0-49e2-be66-46e32f2418df",
                     walletConnectors: [EthereumWalletConnectors],
-                    evmNetworks: [
-                        {
-                            chainId: 421614,
-                            networkId: "421614",
-                            name: "arbitrumSepolia",
-                            iconUrls: [],
-                            nativeCurrency: {
-                                name: "ETH",
-                                symbol: "ETH",
-                                decimals: 18,
-                            },
-                            rpcUrls: ["https://sepolia-rollup.arbitrum.io/rpc"],
-                            blockExplorerUrls: [],
-                        },
-                    ],
                 }}
             >
                 <WagmiProvider config={config}>
