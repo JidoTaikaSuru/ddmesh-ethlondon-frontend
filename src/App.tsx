@@ -32,7 +32,6 @@ function App() {
 
     return (
         <div className={"container"}>
-
             {/*@ts-ignore*/}
             <DynamicContextProvider
                 settings={{
@@ -44,7 +43,7 @@ function App() {
                 <WagmiProvider config={config}>
                     <QueryClientProvider client={queryClient}>
                         <DynamicWagmiConnector>
-                            <div className={"flex p-2 border-b-2 mb-8 items-center"}>
+                            <div className={"flex p-2 border-b-2 mb-8 items-center text-primary"}>
                                 <Link to={"/"} className={"flex space-x-2 items-center"}>
                                     <img src={DDMeshLogo} className={"h-10"}/>
                                     <p className={"text-3xl"}>ddMesh</p>

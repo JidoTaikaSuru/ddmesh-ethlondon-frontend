@@ -15,14 +15,14 @@ export default function Home() {
 			<blockquote className="mt-6 mb-4  pl-6 italic">
 				"Like Filecoin but for structured databases"
 			</blockquote>
-			<div className={"flex flex-col space-y-2"}>
-				<Button onClick={() => navigate(`/getDbProvider`)}>Get a DB</Button>
-				<Button variant="secondary" onClick={() => navigate(`/newDbProvider`)}>Become a Provider</Button>
+			<div className={"flex flex-col space-y-2 items-center"}>
+				<Button className={"w-48"} onClick={() => navigate(`/getDbProvider`)}>Get a DB</Button>
+				<Button className={"w-48"} variant="secondary" onClick={() => navigate(`/newDbProvider`)}>Become a Provider</Button>
 			</div>
 			</div>
-			<div className={"flex items-center"}>
+			<div className={"flex w-full items-center justify-center align-middle space-x-4"}>
 				<img src={DDMeshLogo} className={"h-32"}/>
-				<p className="pb-2 text-3xl font-semibold">
+				<p className="pb-2 text-3xl font-semibold text-primary">
 					ddMesh
 				</p>
 			</div>
