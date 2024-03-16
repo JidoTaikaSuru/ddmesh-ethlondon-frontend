@@ -29,7 +29,7 @@ import ddMeshLogo from "@/assets/ddmesh-logo.svg";
 import {hardcodedDDMToUsdFee} from "@/common.tsx";
 
 
-type Provider = {
+export type Provider = {
     id: bigint;
     pAddress: string;
     fee: bigint; // DDM Tokens
