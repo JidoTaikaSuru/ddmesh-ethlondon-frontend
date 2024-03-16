@@ -1,4 +1,3 @@
-import { useState } from "react";
 import "./App.css";
 import { DbProviderOnboarding } from "@/DbProviderOnboarding.tsx";
 
@@ -11,7 +10,6 @@ import { DynamicWagmiConnector } from "@dynamic-labs/wagmi-connector";
 import { EthereumWalletConnectors } from "@dynamic-labs/ethereum";
 
 function App() {
-  const [count, setCount] = useState(0);
   return (
     <div className={"container border-2"}>
       <DynamicContextProvider
