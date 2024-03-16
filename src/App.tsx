@@ -1,5 +1,4 @@
 import "./App.css";
-import { DbProviderOnboarding } from "@/DbProviderOnboarding.tsx";
 
 import {
   DynamicContextProvider,
@@ -8,6 +7,7 @@ import {
 import { DynamicWagmiConnector } from "@dynamic-labs/wagmi-connector";
 
 import { EthereumWalletConnectors } from "@dynamic-labs/ethereum";
+import Routes from "@/Routes";
 
 function App() {
   return (
@@ -36,7 +36,7 @@ function App() {
       >
         <DynamicWagmiConnector>
           <DynamicWidget />
-          <DbProviderOnboarding />
+          <Routes />
         </DynamicWagmiConnector>
       </DynamicContextProvider>
     </div>
