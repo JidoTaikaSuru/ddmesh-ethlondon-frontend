@@ -52,7 +52,7 @@ const CenterAlignedHeader: FC<{ header: string }> = ({ header }) => (
 
 export const DbProviderOnboarding = () => {
   const { toast } = useToast();
-  const [providerChoice] = useState<bigint>(BigInt(0));
+  const [providerChoice, setProviderChoice] = useState<bigint>(BigInt(0));
 
   const chainId = useChainId();
 
@@ -75,15 +75,19 @@ export const DbProviderOnboarding = () => {
       header: () => {
         return <CenterAlignedHeader header="Storage Price" />;
       },
-      cell: ({ row }: any) => (
-        <div className={"flex-col items-middle"}>
-          <p className={"text-lg flex"}>{hardcodedDDMToUsdFee()}</p>
-          <div className={"flex items-center space-x-1"}>
-            <img className={"h-5"} src={ddMeshLogo} />
-            <p className={"text-lg flex"}>{row.getValue("fee")} DMM/mo</p>
+      cell: ({ row }: any) => {
+        return (
+          <div className={"flex-col items-middle"}>
+            <p className={"text-lg flex"}>{hardcodedDDMToUsdFee()}</p>
+            <div className={"flex items-center space-x-1"}>
+              <img className={"h-5"} src={ddMeshLogo} />
+              <p className={"text-lg flex"}>
+                {row.original.fee.toString()} DMM/mo
+              </p>
+            </div>
           </div>
-        </div>
-      ),
+        );
+      },
     },
     {
       accessorKey: "dataProvider",
@@ -105,15 +109,6 @@ export const DbProviderOnboarding = () => {
         <div className="capitalize">{row.getValue("description")}</div>
       ),
     },
-    // {
-    //     accessorKey: "description",
-    //     header: () => {
-    //         return <CenterAlignedHeader header="Description"/>
-    //     },
-    //     cell: ({row}: any) => (
-    //         <div className="capitalize">{row.getValue("description")}</div>
-    //     ),
-    // },
     {
       accessorKey: "tvl",
       header: () => {
@@ -128,9 +123,16 @@ export const DbProviderOnboarding = () => {
       header: () => {
         return <CenterAlignedHeader header="Deploy" />;
       },
-      cell: () => (
+      cell: ({ row }: any) => (
         <div>
-          <Button onClick={() => onDeploy()}>Deploy</Button>
+          <Button
+            onClick={() => {
+              setProviderChoice(row.original.id);
+              onDeploy();
+            }}
+          >
+            Deploy
+          </Button>
         </div>
       ),
     },
