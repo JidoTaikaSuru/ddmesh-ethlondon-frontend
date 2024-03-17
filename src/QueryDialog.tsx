@@ -42,34 +42,7 @@ export const QueryDialog: FC<{ connectionString: string }> = ({
   if (!matches) {
     return <div>Invalid connection string</div>;
   }
-  //   const sql = postgres("postgres://username:password@host:port/database", {
-  //     host: matches[3], // Postgres ip address[s] or domain name[s]
-  //     port: 5432, // Postgres server port[s]
-  //     database: matches[4], // Name of database to connect to
-  //     username: matches[1], // Username of database user
-  //     password: matches[2], // Password of database user
-  //   });
-  const config: ClientConfig = {
-    // user: matches[1],
-    // password: matches[2],
-    // host: matches[3],
-    // port: 5432,
-    // database: matches[4],
-    // options: 'sslmode=require',
-    // ssl: {}
-    connectionString: connectionString,
-  };
-  // const config = parseConnectionString(connectionStringReplace);
-  // const connectionStringUrl = new URL(connectionString);
-  // const config = {
-  //     user: connectionStringUrl.username,
-  //     password: connectionStringUrl.password,
-  //     host: connectionStringUrl.hostname,
-  //     port: connectionStringUrl.port,
-  //     database: connectionStringUrl.pathname.split('/')[1],
-  //     ssl: connectionStringUrl.searchParams.get('sslmode') === 'require' ? {rejectUnauthorized: false} : false
-  // };
-  console.log("config", config);
+
 
   // const client = new Client();
   useEffect(() => {
@@ -90,23 +63,8 @@ export const QueryDialog: FC<{ connectionString: string }> = ({
     if (startExecuteQuery) {
       executeQuery();
     }
-    const regex = /^postgresql:\/\/([^:]+):([^@]+)@([^:]+)\/([^?]+)\?(.+)/;
-    const matches = connectionString.match(regex);
-    if(!matches) {
-        return <div>Invalid connection string</div>
-    }
+})
    
-    // const config = parseConnectionString(connectionStringReplace);
-    // const connectionStringUrl = new URL(connectionString);
-    // const config = {
-    //     user: connectionStringUrl.username,
-    //     password: connectionStringUrl.password,
-    //     host: connectionStringUrl.hostname,
-    //     port: connectionStringUrl.port,
-    //     database: connectionStringUrl.pathname.split('/')[1],
-    //     ssl: connectionStringUrl.searchParams.get('sslmode') === 'require' ? {rejectUnauthorized: false} : false
-    // };
-    // console.log("config", config)
 
   return (
     <Dialog>
