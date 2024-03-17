@@ -42,7 +42,6 @@
     "pg-query-stream": "^4.5.3",
     "pg-types": "^4.0.2",
     "pgpass": "^1.0.5",
-    "postgres": "^3.4.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.51.0",
