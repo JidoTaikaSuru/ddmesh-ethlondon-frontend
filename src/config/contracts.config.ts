@@ -20,6 +20,11 @@ const contracts = {
     // ddmeshMarket: "0x6359a62c07AB8694746046eC7Db834112f53BfE5",
     ddmeshMarket: "0x2f77ed64b404572f86Bd5345F904d754DEc99338",
   },
+  44787: {
+    // celo
+    token: "0x874069fa1eb16d44d622f2e0ca25eea172369bc1",
+    ddmeshMarket: "0xBBB017c1db26096280852A93eF9e9A355f82C82d",
+  },
 };
 
 export const getContracts = (chainId: number): Contracts => {

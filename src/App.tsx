@@ -13,7 +13,12 @@ import { createConfig, WagmiProvider } from "wagmi";
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { http } from "viem";
-import { arbitrumSepolia, baseSepolia, mainnet } from "viem/chains";
+import {
+  arbitrumSepolia,
+  baseSepolia,
+  mainnet,
+  celoAlfajores,
+} from "viem/chains";
 import Routes from "@/Routes";
 import { Toaster } from "./components/ui/toaster";
 import DDMeshLogo from "./assets/ddmesh-logo-fixed.svg";
@@ -37,13 +42,14 @@ export const ddmeshOrbit = {
 } as const satisfies Chain;
 
 const config = createConfig({
-  chains: [mainnet, ddmeshOrbit, arbitrumSepolia, baseSepolia],
+  chains: [mainnet, ddmeshOrbit, arbitrumSepolia, baseSepolia, celoAlfajores],
   multiInjectedProviderDiscovery: false,
   transports: {
     1: http(),
     82554: http(), // ddMesh Orbit
     421614: http(), // arbitrum sepolia
     84532: http(), //base sepolia
+    44787: http(), //celo alfajores
   },
 });
 
@@ -108,6 +114,21 @@ function App() {
                 rpcUrls: ["https://rpc.notadegen.com/base/sepolia"],
                 blockExplorerUrls: ["https://sepolia.basescan.org/"],
                 vanityName: "Base Sepolia",
+              },
+              {
+                chainId: 44787,
+                chainName: "Celo Alfajores Testnet",
+                iconUrls: ["https://app.dynamic.xyz/assets/networks/celo.svg"],
+                name: "Celo Alfajores Testnet",
+                nativeCurrency: {
+                  name: "ETH",
+                  symbol: "ETH",
+                  decimals: 18,
+                },
+                networkId: 44787,
+                rpcUrls: ["https://alfajores-forno.celo-testnet.org"],
+                blockExplorerUrls: ["https://explorer.celo.org/alfajores"],
+                vanityName: "Celo Alfajores",
               },
             ],
           },
