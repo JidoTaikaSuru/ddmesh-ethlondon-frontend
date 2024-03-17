@@ -33,6 +33,8 @@ import { abi as ddmeshMarketAbi } from "./../contracts/DDMeshMarket.sol/DDMeshMa
 import { useToast } from "@/components/ui/use-toast";
 import { useNavigate } from "react-router-dom";
 
+import { parseEther } from "viem";
+
 const formSchema = z.object({
   provider: z.string().min(1),
   ens: z.string().min(1),
@@ -102,7 +104,7 @@ export const NewDbProvider = () => {
       provider: "",
       ens: "",
       apiKey: "",
-      fee: "0",
+      fee: "0.00001",
       max_databases: "1",
     },
   });
@@ -122,7 +124,7 @@ export const NewDbProvider = () => {
       abi: ddmeshMarketAbi,
       functionName: "registerProvider",
       args: [
-        BigInt(form.watch("fee")),
+        parseEther(form.watch("fee")),
         form.watch("apiKey"),
         form.watch("ens"),
         form.watch("provider"),
@@ -365,10 +367,10 @@ export const NewDbProvider = () => {
                         />
                         <div className="w-4/5 mx-auto px-2 mb-0 pb-0 flex flex-row flex-columns-2 gap-6 justify-between items-center">
                           <RenderMESHInWeek
-                            perMinuteFee={parseFloat(form.watch("fee"))}
+                            perSecondFee={parseFloat(form.watch("fee"))}
                           />
                           <RenderMESHInMonth
-                            perMinuteFee={parseFloat(form.watch("fee"))}
+                            perSecondFee={parseFloat(form.watch("fee"))}
                           />
                         </div>
                         <RenderNeonVerification
