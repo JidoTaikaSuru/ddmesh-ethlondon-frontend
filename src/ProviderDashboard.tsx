@@ -1,63 +1,70 @@
-import {FC} from "react";
 import * as React from "react";
+import {FC} from "react";
 import {
     ColumnDef,
     ColumnFiltersState,
-    getCoreRowModel, getFilteredRowModel,
-    getPaginationRowModel, getSortedRowModel,
+    getCoreRowModel,
+    getFilteredRowModel,
+    getPaginationRowModel,
+    getSortedRowModel,
     SortingState,
     VisibilityState
 } from "@tanstack/table-core";
 import {Button} from "@/components/ui/button";
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table";
 import {flexRender, useReactTable} from "@tanstack/react-table";
-import {Provider} from "@/DbProviderOnboarding";
 import {useChainId, useReadContract} from "wagmi";
 import {abi as ddmeshMarketAbi} from "../contracts/DDMeshMarket.sol/DDMeshMarket.json";
 import {getContracts} from "@/config/contracts.config";
 import ddMeshLogo from "@/assets/ddmesh-logo-fixed.svg";
-import {hardcodedDDMToUsdFee} from "@/common";
+import {hardcodedDDMToUsdFee, Provider} from "@/common";
 import {
     Dialog,
     DialogContent,
     DialogDescription,
-    DialogFooter,
     DialogHeader,
     DialogTitle,
     DialogTrigger,
 } from "@/components/ui/dialog"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
+import {
+    Pagination,
+    PaginationContent,
+    PaginationEllipsis,
+    PaginationItem,
+    PaginationLink,
+    PaginationNext,
+    PaginationPrevious
+} from "@/components/ui/pagination.tsx";
 
 const agreements: Agreement[] = [
     {
-        id: 4,
+        id: 4n,
         user: "User10",
-        userBalance: 5.3,
-        providerId: 3,
-        startTimeStamp: 3543,
+        userBalance: 53n,
+        providerId: 3n,
+        startTimeStamp: 3543n,
         status: "ENTERED",
         providerAddress: "providerAddress",
         providerClaimed: "providerClaimed",
         encConnectionString: "fakeConnectionString1",
     },
     {
-        id: 23,
+        id: 23n,
         user: "User10",
-        userBalance: 5.3,
-        providerId: 3,
-        startTimeStamp: 3543,
+        userBalance: 53n,
+        providerId: 3n,
+        startTimeStamp: 3543n,
         status: "ENTERED",
         providerAddress: "providerAddress",
         providerClaimed: "providerClaimed",
         encConnectionString: "fakeConnectionString1",
     },
     {
-        id: 10,
+        id: 10n,
         user: "User10",
-        userBalance: 5.3,
-        providerId: 3,
-        startTimeStamp: 3543,
+        userBalance: 53n,
+        providerId: 3n,
+        startTimeStamp: 3543n,
         status: "ENTERED",
         providerAddress: "providerAddress",
         providerClaimed: "providerClaimed",
@@ -114,7 +121,7 @@ const Agreements = () => {
             },
             cell: ({row}: any) => (
                 <div className={"justify-center flex items-center space-x-1"}>
-                    <img className={"h-5"} src={ddMeshLogo} />
+                    <img className={"h-5"} src={ddMeshLogo}/>
                     <p className={"text-lg"}>{row.getValue("userBalance")}</p>
                 </div>
             ),
@@ -153,7 +160,7 @@ const Agreements = () => {
     ]
 
     const table = useReactTable({
-        data: agreements || [] ,
+        data: agreements || [],
         columns,
         onSortingChange: setSorting,
         onColumnFiltersChange: setColumnFilters,
@@ -171,7 +178,7 @@ const Agreements = () => {
         },
     })
 
-    return(
+    return (
         <div className={"text-center"}>
             <br/>
             <h3 className="mt-10 scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight transition-colors first:mt-0">
@@ -264,7 +271,7 @@ export const ProviderDashboard = () => {
                 <div className={"flex-col items-middle"}>
                     <p className={"text-lg flex"}>{hardcodedDDMToUsdFee()}</p>
                     <div className={"flex items-center space-x-1"}>
-                        <img className={"h-5"} src={ddMeshLogo} />
+                        <img className={"h-5"} src={ddMeshLogo}/>
                         <p className={"text-lg flex"}>{row.getValue("fee")} DMM/mo</p>
                     </div>
                 </div>
@@ -373,7 +380,7 @@ export const ProviderDashboard = () => {
             <div className={"text-center"}>
                 <h1>Provider Dashboard</h1>
                 <h3 className="mt-10 scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight transition-colors first:mt-0">
-                    Products catalog
+                    My Products
                 </h3>
                 <div className="rounded-md border">
                     <Table>
@@ -432,7 +439,41 @@ export const ProviderDashboard = () => {
                     </Table>
                 </div>
             </div>
+
+            <Pagination>
+                <PaginationContent>
+                    <PaginationItem>
+                        <PaginationPrevious href="#"/>
+                    </PaginationItem>
+                    <PaginationItem>
+                        <PaginationLink href="#">1</PaginationLink>
+                    </PaginationItem>
+                    <PaginationItem>
+                        <PaginationEllipsis/>
+                    </PaginationItem>
+                    <PaginationItem>
+                        <PaginationNext href="#"/>
+                    </PaginationItem>
+                </PaginationContent>
+            </Pagination>
             <Agreements/>
+
+            <Pagination>
+                <PaginationContent>
+                    <PaginationItem>
+                        <PaginationPrevious href="#"/>
+                    </PaginationItem>
+                    <PaginationItem>
+                        <PaginationLink href="#">1</PaginationLink>
+                    </PaginationItem>
+                    <PaginationItem>
+                        <PaginationEllipsis/>
+                    </PaginationItem>
+                    <PaginationItem>
+                        <PaginationNext href="#"/>
+                    </PaginationItem>
+                </PaginationContent>
+            </Pagination>
         </>
     );
 };

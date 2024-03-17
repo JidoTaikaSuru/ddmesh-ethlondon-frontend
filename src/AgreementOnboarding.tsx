@@ -33,7 +33,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import ddMeshLogo from "@/assets/ddmesh-logo.svg";
-import { hardcodedDDMToUsdFee } from "@/common.tsx";
+import {hardcodedDDMToUsdFee, Provider} from "@/common.tsx";
 import {
   Pagination,
   PaginationContent,
@@ -43,17 +43,6 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination.tsx";
-
-type Provider = {
-  id: bigint;
-  pAddress: string;
-  fee: bigint; // DDM Tokens
-  encApiKey: string;
-  ensName: string;
-  description: string;
-  noOfDbAgreements: bigint;
-  activeAgreements: bigint;
-};
 
 const CenterAlignedHeader: FC<{ header: string }> = ({ header }) => (
   <div className="capitalize text-center">{header}</div>
@@ -252,8 +241,8 @@ export const AgreementOnboarding = () => {
 
   return (
     <>
-      <p className="leading-7 [&:not(:first-child)]:mt-6 text-2xl">
-        My Agreementss
+      <p className="leading-7 [&:not(:first-child)]:mt-6 mb-4text-2xl">
+        Get a database
       </p>
       <div className="rounded-md border">
         <Table>
@@ -310,22 +299,7 @@ export const AgreementOnboarding = () => {
             )}
           </TableBody>
         </Table>
-        <Pagination>
-          <PaginationContent>
-            <PaginationItem>
-              <PaginationPrevious href="#" />
-            </PaginationItem>
-            <PaginationItem>
-              <PaginationLink href="#">1</PaginationLink>
-            </PaginationItem>
-            <PaginationItem>
-              <PaginationEllipsis />
-            </PaginationItem>
-            <PaginationItem>
-              <PaginationNext href="#" />
-            </PaginationItem>
-          </PaginationContent>
-        </Pagination>
+
         {/*<div className="flex items-center justify-end space-x-2 pt-4">*/}
         {/*  <div className="flex-1 text-sm text-muted-foreground">*/}
         {/*    <Button*/}
@@ -347,6 +321,22 @@ export const AgreementOnboarding = () => {
         {/*  </div>*/}
         {/*</div>*/}
       </div>
+      <Pagination>
+        <PaginationContent>
+          <PaginationItem>
+            <PaginationPrevious href="#" />
+          </PaginationItem>
+          <PaginationItem>
+            <PaginationLink href="#">1</PaginationLink>
+          </PaginationItem>
+          <PaginationItem>
+            <PaginationEllipsis />
+          </PaginationItem>
+          <PaginationItem>
+            <PaginationNext href="#" />
+          </PaginationItem>
+        </PaginationContent>
+      </Pagination>
     </>
   );
 };

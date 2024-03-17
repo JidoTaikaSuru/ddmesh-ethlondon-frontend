@@ -52,3 +52,14 @@ export enum AgreementStatus {
     REVOKED,
     ERROR,
 }
+
+export type Provider = {
+    id: bigint;
+    pAddress: string;
+    fee: bigint; // DDM Tokens
+    encApiKey: string;
+    ensName: string;
+    description: string;
+    noOfDbAgreements: bigint;
+    activeAgreements: bigint;
+};
