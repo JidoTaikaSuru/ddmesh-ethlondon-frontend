@@ -57,97 +57,68 @@ export const UserAgreements = () => {
     .ddmeshMarket as `0x${string}`;
   console.log("ddmeshMarketAddress", ddmeshMarketAddress);
 
-  const {
-    isPending: isPendingApprove,
-    writeContract: writeContractApprove,
-    isSuccess: isApproveSuccess,
-  } = useWriteContract();
+  // const {
+  //   isPending: isPendingApprove,
+  //   writeContract: writeContractApprove,
+  //   isSuccess: isApproveSuccess,
+  // } = useWriteContract();
 
-  const {
-    writeContract: writeContractEnterAgreement,
-    isSuccess: isEnterAgreementSuccess,
-    isError: isEnterAgreementError,
-  } = useWriteContract();
+  // const {
+  //   writeContract: writeContractEnterAgreement,
+  //   isSuccess: isEnterAgreementSuccess,
+  //   isError: isEnterAgreementError,
+  // } = useWriteContract();
 
   const onDeploy = async () => {
-    writeContractApprove({
-      address: tokenAddress,
-      abi: tokenAbi,
-      functionName: "approve",
-      args: [ddmeshMarketAddress, BigInt(1)],
-    });
+    // writeContractApprove({
+    //   address: tokenAddress,
+    //   abi: tokenAbi,
+    //   functionName: "approve",
+    //   args: [ddmeshMarketAddress, BigInt(1)],
+    // });
   };
 
-  useEffect(() => {
-    if (
-      isApproveSuccess &&
-      !isPendingApprove &&
-      !isEnterAgreementError &&
-      !isEnterAgreementSuccess
-    ) {
-      console.log(
-        "Approve success, entering agreement now. providerChoice: ",
-        providerChoice
-      );
-      writeContractEnterAgreement({
-        address: ddmeshMarketAddress,
-        abi: ddmeshMarketAbi,
-        functionName: "enterAgreement",
-        args: [providerChoice, BigInt(1)],
-      });
-    }
-  }, [isApproveSuccess]);
-
-  const { data: providers } = useReadContract({
+  const { data: userAgreements } = useReadContract({
     address: ddmeshMarketAddress,
     abi: ddmeshMarketAbi,
-    functionName: "getAllProviders",
+    functionName: "getUserAgreements",
     args: [],
   });
 
   return (
     <>
-      <h1 className={"text-3xl"}>Data Providers</h1>
+      <h1 className={"text-3xl"}>User Agreements</h1>
       <div>
-        {(providers as Provider[]) &&
-          providers?.map((provider: Provider, index: number) => {
+        {/* show the agreements in cards using now the agreement type and show all Agreement props of userAgreements:
+        show user, userbalance, providerAddress, providerClaimed, status, encConnectionString, startTimeStamp,  */}
+        {/* type Agreement = {
+  id: bigint; // or number, if within JS safe integer range
+  user: string; // Address as a string
+  userBalance: bigint; // or number
+  providerAddress: string; // Address as a string
+  providerId: bigint; // or number
+  providerClaimed: bigint; // or number
+  encConnectionString: string;
+  startTimeStamp: bigint; // or number, timestamp as number is usually safe
+  status: AgreementStatus;
+};
+
+enum AgreementStatus {
+  NONE,
+  ENTERED,
+  ACTIVE,
+  CLOSED,
+  REVOKED,
+  ERROR,
+} */}
+        {(userAgreements as Agreement[]) &&
+          userAgreements?.map((userAgreement: Agreement, index: number) => {
             return (
-              <Card className={"p-4 flex items-center leading-4 gap-x-2"}>
-                <Checkbox style={{ height: 30, width: 30 }} />
-                <Jazzicon
-                  diameter={60}
-                  seed={jsNumberForAddress(provider.pAddress)}
-                />
-                <p className={"text-xl"}>{provider.ensName}</p>
-                <div className={"flex-col"}>
-                  <p className={"text-sm"}>Rank</p>
-                  <p className={"text-xl"}>#{index + 1}</p>
-                </div>
-                <div className={"flex-col align-middle justify-center"}>
-                  <p className={"text-sm"}>Database</p>
-                  <img style={{ height: 25 }} src={PostgresLogo} />
-                </div>
-                <div className={"flex-col"}>
-                  <p className={"text-sm"}>Storage Available</p>
-                  <p className={"text-xl"}>100GB</p>
-                </div>
-                <div className={"flex-col"}>
-                  <p className={"text-sm"}>Storage Price</p>
-                  <p className={"text-xl flex"}>
-                    <img className={"h-5"} src={UsdcLogo} />
-                    <p>0.001/min</p>
-                  </p>
-                </div>
-                <div>
-                  <Button
-                    onClick={() => {
-                      setProviderChoice(provider.id);
-                      onDeploy();
-                    }}
-                  >
-                    Deploy
-                  </Button>
-                </div>
+              <Card
+                key={index}
+                className={"p-4 flex items-center leading-4 gap-x-2"}
+              >
+                LL
               </Card>
             );
           })}
