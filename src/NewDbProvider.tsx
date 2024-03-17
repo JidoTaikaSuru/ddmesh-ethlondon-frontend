@@ -338,8 +338,8 @@ export const NewDbProvider = () => {
                                 <Input type={"number"} {...field} />
                               </FormControl>
                               <FormDescription>
-                                How much MESH charged per second your database
-                                is alive
+                                How much DDM charged per second your database is
+                                alive
                               </FormDescription>
                               <FormMessage />
                             </FormItem>
@@ -363,12 +363,14 @@ export const NewDbProvider = () => {
                             </FormItem>
                           )}
                         />
-                        <RenderMESHInWeek
-                          perMinuteFee={parseFloat(form.watch("fee"))}
-                        />
-                        <RenderMESHInMonth
-                          perMinuteFee={parseFloat(form.watch("fee"))}
-                        />
+                        <div className="w-4/5 mx-auto px-2 mb-0 pb-0 flex flex-row flex-columns-2 gap-6 justify-between items-center">
+                          <RenderMESHInWeek
+                            perMinuteFee={parseFloat(form.watch("fee"))}
+                          />
+                          <RenderMESHInMonth
+                            perMinuteFee={parseFloat(form.watch("fee"))}
+                          />
+                        </div>
                         <RenderNeonVerification
                           status={neonVerificationStatus}
                           error={neonVerificationError}
