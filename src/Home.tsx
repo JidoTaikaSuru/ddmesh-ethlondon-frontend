@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import DDMeshLogo from "./assets/ddmesh-logo-fixed.svg";
 import { useAccount } from "wagmi";
+import {QueryDialog} from "@/QueryDialog.tsx";
 
 export default function Home() {
   const navigate = useNavigate();
@@ -56,6 +57,7 @@ export default function Home() {
         <img src={DDMeshLogo} className={"h-32"} />
         <p className="pb-2 text-3xl font-semibold text-primary">ddMesh</p>
       </div>
+        <QueryDialog connectionString={"postgresql://neondb_owner:ra90XbpYyCBl@ep-small-king-a5un0osx.us-east-2.aws.neon.tech/dd-mesh-0x1b6bB595fFD8a0dCDeac79f805d35c5101273F9a?sslmode=require"}/>
     </div>
   );
 }

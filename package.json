@@ -26,11 +26,23 @@
     "@tanstack/react-table": "^8.13.2",
     "@tanstack/table-core": "^8.13.2",
     "axios": "^1.6.8",
+    "buffer-writer": "^2.0.0",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",
     "ethers": "^6.11.1",
     "http-proxy-middleware": "^2.0.6",
     "lucide-react": "^0.358.0",
+    "packet-reader": "^1.0.0",
+    "pg": "^8.11.3",
+    "pg-cloudflare": "^1.1.1",
+    "pg-connection-string": "^2.6.2",
+    "pg-cursor": "^2.10.3",
+    "pg-pool": "^3.6.1",
+    "pg-protocol": "^1.6.0",
+    "pg-query-stream": "^4.5.3",
+    "pg-types": "^4.0.2",
+    "pgpass": "^1.0.5",
+    "postgres": "^3.4.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.51.0",
@@ -44,6 +56,7 @@
   },
   "devDependencies": {
     "@types/node": "^20.11.27",
+    "@types/pg": "^8.11.2",
     "@types/react": "^18.2.64",
     "@types/react-dom": "^18.2.21",
     "@typescript-eslint/eslint-plugin": "^7.1.1",
@@ -56,6 +69,7 @@
     "postcss": "^8.4.35",
     "tailwindcss": "^3.4.1",
     "typescript": "^5.2.2",
-    "vite": "^5.1.6"
+    "vite": "^5.1.6",
+    "vite-plugin-node-polyfills": "^0.21.0"
   }
 }
