@@ -12,7 +12,6 @@ export default function Routes() {
         <Route path="/" element={<Home/>} />
         <Route path="/getDbProvider" element={<AgreementOnboarding/>} />
         <Route path="/getUserAgreements" element={<UserAgreements/>} />
-        <Route path="/deployDbProvider" element={<DeployDbProvider/>} />
         <Route path="/newDbProvider" element={<NewDbProvider />} />
         <Route path="/providerDashboard" element={<ProviderDashboard />} />
       </ReactRoutes>

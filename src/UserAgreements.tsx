@@ -1,7 +1,6 @@
 import {Button} from "@/components/ui/button";
 import * as React from "react";
-import {useState} from "react";
-import {useChainId, useWriteContract} from "wagmi";
+import {useAccount, useChainId, useClient, useReadContract} from "wagmi";
 import {getContracts} from "./config/contracts.config";
 import {
     ColumnDef,
@@ -13,7 +12,7 @@ import {
     SortingState,
     VisibilityState,
 } from "@tanstack/table-core";
-import {Agreement, AgreementStatus, CenterAlignedHeader, Provider} from "@/common.tsx";
+import {Agreement, CenterAlignedHeader, Provider} from "@/common.tsx";
 import {flexRender, useReactTable} from "@tanstack/react-table";
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow,} from "@/components/ui/table.tsx";
 import DDMeshLogo from "./assets/ddmesh-logo-fixed.svg";
@@ -34,13 +33,16 @@ import {
     PaginationNext,
     PaginationPrevious
 } from "@/components/ui/pagination.tsx";
+import {abi as ddmeshMarketAbi} from "../contracts/DDMeshMarket.sol/DDMeshMarket.json";
+import {useEffect} from "react";
 
 
 export const UserAgreements = () => {
     // const [providerChoice, _] = useState<bigint>(BigInt(0));
 
+    const client = useClient();
     const chainId = useChainId();
-
+    const {address: userAddress,} = useAccount();
     // const tokenAddress = getContracts(chainId).token as `0x${string}`;
     const ddmeshMarketAddress = getContracts(chainId)
         .ddmeshMarket as `0x${string}`;
@@ -66,38 +68,84 @@ export const UserAgreements = () => {
 
     // TODO Get provider names from contract
 
-    // const {data: providers} = useReadContract({
+    const {data: userAgreements} = useReadContract({
+        address: ddmeshMarketAddress,
+        abi: ddmeshMarketAbi,
+        functionName: "getUserAgreements",
+        args: [userAddress],
+    });
+
+    // const {contract} = useReadContract({
     //     address: ddmeshMarketAddress,
     //     abi: ddmeshMarketAbi,
-    //     functionName: "getAllProviders",
+    // });
+    // useEffect(() => {
+    //     // fetch balance for each agreement
+    //     const fetchBalances = async () => {
+    //         if (userAgreements) {
+    //             client.
+    //             for (let i = 0; i < userAgreements.length; i++) {
+    //                 const agreement = userAgreements[i];
+    //
+    //                 const {data: balance} = await useReadContract({
+    //                     address: ddmeshMarketAddress,
+    //                     abi: ddmeshMarketAbi,
+    //                     functionName: "getBalance",
+    //                     args: [agreement.id],
+    //                 });
+    //                 userAgreements[i].userBalance = balance;
+    //             }
+    //         }
+    //     };
+    // }, [userAgreements])
+
+    //
+    // const {data: agreementsArr} = useReadContract({
+    //     address: ddmeshMarketAddress,
+    //     abi: ddmeshMarketAbi,
+    //     functionName: "getAllAgreements",
     //     args: [],
     // });
-    //
-    //
-    // Columns:
-    //     id: BigInt(1),
-    //         user: '0xAb5801a7D398351b8bE11C439e05C5B3259aeC9B',
-    //     userBalance: BigInt(1000),
-    //     providerId: BigInt(1),
-    //     startTimeStamp: BigInt(Date.now()),
-    //     status: AgreementStatus.ENTERED,
-    //
-    //
-    //     Columns you don't show (just putting these here so you know not to show them):
-    // providerAddress: '0x4E83362442B8d1beC281594CEA3050c8EB01311C',
-    //     providerClaimed: BigInt(0),
-    //     encConnectionString: 'fakeConnectionString1',
+    // const agreements = (agreementsArr as Agreement[]).filter((agreement: Agreement) => agreement.user === userAddress);
+
+
+    const {data: providersArr} = useReadContract({
+        address: ddmeshMarketAddress,
+        abi: ddmeshMarketAbi,
+        functionName: "getAllProviders",
+        args: [],
+    });
+    const providersObj: {[key: string]: Provider} = (providersArr as Provider[])?.reduce<{ [key: string]: Provider; }>((acc, provider) => {
+        acc[provider.id.toString()] = provider;
+        return acc;
+    }, {});
+    console.log("providersObj", providersObj);
+
+
+
     const columns: ColumnDef<Agreement>[] = [
         {
             accessorKey: "providerId",
             header: () => {
-                return <CenterAlignedHeader header="Provider"/>;
+                return <CenterAlignedHeader header="ID"/>;
             },
             cell: ({row}: any) => (
                 <div className={"flex items-center justify-center"}>
-                    <p>{row.original?.providerId.toString()}</p>
+                    <p>{row.original?.providerId?.toString()}</p>
                 </div>
             ),
+        },
+        {
+            accessorKey: "Name",
+            header: () => {
+                return <CenterAlignedHeader header="Name"/>;
+            },
+            cell: ({row}: any) => {
+                console.log("row.original", row.original);
+                console.log("row.original?.id", row.original?.id);
+                console.log("providersObj[row.original?.id]", providersObj[row.original?.id?.toString()]);
+                return (<div className="text-center">{providersObj[row.original?.id?.toString()]?.description}</div>)
+            }
         },
         {
             accessorKey: "userBalance",
@@ -112,24 +160,14 @@ export const UserAgreements = () => {
             ),
         },
         {
-            accessorKey: "description",
-            header: () => {
-                return <CenterAlignedHeader header="Name"/>;
-            },
-            cell: ({row}: any) => (
-                <div className="text-center">{row.getValue("description")}</div>
-            ),
-        },
-        {
             accessorKey: "startTimestamp",
             header: () => {
                 return <CenterAlignedHeader header="Start Time"/>;
             },
             cell: ({row}: any) => (
-                <div className="text-center">TODO {row.getValue("startTimestamp")}</div>
+                <div className="text-center">{new Date(parseInt(row.original?.startTimeStamp.toString()) * 1000).toLocaleString()}</div>
             ),
         },
-
         {
             accessorKey: "Actions",
             header: () => {
@@ -167,46 +205,9 @@ export const UserAgreements = () => {
         },
     ];
 
-    //
-
-    const agreements: Agreement[] = [
-        {
-            id: BigInt(1),
-            user: "0xAb5801a7D398351b8bE11C439e05C5B3259aeC9B",
-            userBalance: BigInt(1000),
-            providerAddress: "0x4E83362442B8d1beC281594CEA3050c8EB01311C",
-            providerId: BigInt(1),
-            providerClaimed: BigInt(0),
-            encConnectionString: "fakeConnectionString1",
-            startTimeStamp: BigInt(Date.now()),
-            status: AgreementStatus.ENTERED,
-        },
-        {
-            id: BigInt(2),
-            user: "0xCA35b7d915458EF540aDe6068dFe2F44E8fa733c",
-            userBalance: BigInt(2000),
-            providerAddress: "0x14723A09ACff6D2A60DcdF7aA4AFf308FDDC160C",
-            providerId: BigInt(2),
-            providerClaimed: BigInt(500),
-            encConnectionString: "fakeConnectionString2",
-            startTimeStamp: BigInt(Date.now()),
-            status: AgreementStatus.ACTIVE,
-        },
-        {
-            id: BigInt(3),
-            user: "0x4B0897b0513fdC7C541B6d9D7E929C4e5364D2dB",
-            userBalance: BigInt(3000),
-            providerAddress: "0x583031D1113aD414F02576BD6afaBfb302140225",
-            providerId: BigInt(3),
-            providerClaimed: BigInt(1000),
-            encConnectionString: "fakeConnectionString3",
-            startTimeStamp: BigInt(Date.now()),
-            status: AgreementStatus.CLOSED,
-        },
-    ];
 
     const table = useReactTable({
-        data: (agreements as Agreement[]) || [],
+        data: (userAgreements as Agreement[]) || [],
         //@ts-ignore
         columns,
         onSortingChange: setSorting,
@@ -298,26 +299,6 @@ export const UserAgreements = () => {
                         </PaginationItem>
                     </PaginationContent>
                 </Pagination>
-                {/*<div className="flex items-center justify-end space-x-2 pt-4">*/}
-                {/*  <div className="flex-1 text-sm text-muted-foreground">*/}
-                {/*    <Button*/}
-                {/*      variant="outline"*/}
-                {/*      size="sm"*/}
-                {/*      onClick={() => table.previousPage()}*/}
-                {/*      disabled={!table.getCanPreviousPage()}*/}
-                {/*    >*/}
-                {/*      Previous*/}
-                {/*    </Button>*/}
-                {/*    <Button*/}
-                {/*      variant="outline"*/}
-                {/*      size="sm"*/}
-                {/*      onClick={() => table.nextPage()}*/}
-                {/*      disabled={!table.getCanNextPage()}*/}
-                {/*    >*/}
-                {/*      Next*/}
-                {/*    </Button>*/}
-                {/*  </div>*/}
-                {/*</div>*/}
             </div>
         </>
     );
