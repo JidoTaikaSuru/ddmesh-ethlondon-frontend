@@ -309,7 +309,7 @@ export const ProviderDashboard = () => {
             ),
         },
         {
-            accessorKey: "button",
+            accessorKey: "encApiKey",
             header: () => {
                 return <CenterAlignedHeader header=""/>
             },
@@ -319,7 +319,7 @@ export const ProviderDashboard = () => {
                         <DialogTrigger asChild>
                             <Button onClick={() => onDelete()} variant="secondary">Show API Key</Button>
                         </DialogTrigger>
-                        <DialogContent className="sm:max-w-[425px]">
+                        <DialogContent className="sm:max">
                             <DialogHeader>
                                 <DialogTitle>API Key</DialogTitle>
                                 <DialogDescription>
