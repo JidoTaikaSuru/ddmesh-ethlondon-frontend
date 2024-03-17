@@ -113,9 +113,9 @@ const Agreements = () => {
                 return <CenterAlignedHeader header="User balance"/>
             },
             cell: ({row}: any) => (
-                <div className={"flex items-center space-x-1"}>
+                <div className={"justify-center flex items-center space-x-1"}>
                     <img className={"h-5"} src={ddMeshLogo} />
-                    <p className={"text-lg flex"}>{row.getValue("userBalance")}</p>
+                    <p className={"text-lg"}>{row.getValue("userBalance")}</p>
                 </div>
             ),
         },
