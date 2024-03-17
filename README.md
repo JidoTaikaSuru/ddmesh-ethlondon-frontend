@@ -22,7 +22,7 @@ In addition to the frontend, you must run our daemon at `https://github.com/ethl
 
 The daemon has a rest endpoint that proxies postgres queries to the database provider since frontend apps struggle with sockets and peristent connections
 
-Both the daemon and the frontend run against live contracts deployed to our Orbit Chain, Arbitrum Sepolia, Base, and Celo. Contract addresses are hardcoded against chain ids at [./src/config/contracts.config.ts](./src/config/contracts.config.ts). Currently **our Orbit Chain is the only one gauranteed to be up to date**
+Both the daemon and the frontend run against [live contracts](https://github.com/ethlondon2024/ddmesh-ethlondon-contracts) deployed to our Orbit Chain, Arbitrum Sepolia, Base, and Celo. Contract addresses are hardcoded against chain ids at [./src/config/contracts.config.ts](./src/config/contracts.config.ts). Currently **our Orbit Chain is the only one gauranteed to be up to date**
 
 ## Build
 
@@ -31,7 +31,7 @@ You can run the following command to build
   pnpm build
 ```
 
-You can then load dist/index.html in your browser to view the production build of the application on your local device
+You can then load [./dist/index.html]() in your browser to view the production build of the application on your local device
 
 ## Deployment
 
