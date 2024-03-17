@@ -11,10 +11,10 @@ import {FC, useEffect, useState} from "react";
 import {Card} from "@/components/ui/card.tsx";
 // @ts-ignore
 // import {Client} from "pg-ens";
-import {Client, ClientConfig} from "pg";
+import {Client, ClientConfig} from "pg-node-ens";
 import {Textarea} from "@/components/ui/textarea.tsx";
 
-import postgres from 'postgres'
+// import postgres from 'postgres'
 import axios from "axios";
 // import {parse as parseConnectionString} from "pg-connection-string";
 
@@ -36,23 +36,7 @@ export const QueryDialog: FC<{ connectionString: string }> = ({connectionString}
     if(!matches) {
         return <div>Invalid connection string</div>
     }
-    const sql = postgres('postgres://username:password@host:port/database', {
-        host                 : matches[3],            // Postgres ip address[s] or domain name[s]
-        port                 : 5432,          // Postgres server port[s]
-        database             : matches[4],            // Name of database to connect to
-        username             : matches[1],            // Username of database user
-        password             : matches[2],            // Password of database user
-    })
-    const config: ClientConfig = {
-        // user: matches[1],
-        // password: matches[2],
-        // host: matches[3],
-        // port: 5432,
-        // database: matches[4],
-        // options: 'sslmode=require',
-        // ssl: {}
-        connectionString: connectionString
-    }
+   
     // const config = parseConnectionString(connectionStringReplace);
     // const connectionStringUrl = new URL(connectionString);
     // const config = {
@@ -63,7 +47,7 @@ export const QueryDialog: FC<{ connectionString: string }> = ({connectionString}
     //     database: connectionStringUrl.pathname.split('/')[1],
     //     ssl: connectionStringUrl.searchParams.get('sslmode') === 'require' ? {rejectUnauthorized: false} : false
     // };
-    console.log("config", config)
+    // console.log("config", config)
 
     // const client = new Client();
     useEffect(() => {

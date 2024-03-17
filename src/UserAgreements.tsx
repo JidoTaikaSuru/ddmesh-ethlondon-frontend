@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import * as React from "react";
-import { useAccount, useChainId, useClient, useReadContract } from "wagmi";
+import { useAccount, useChainId, useReadContract } from "wagmi";
 import { getContracts } from "./config/contracts.config";
 import {
   ColumnDef,
@@ -23,14 +23,14 @@ import {
   TableRow,
 } from "@/components/ui/table.tsx";
 import DDMeshLogo from "./assets/ddmesh-logo-fixed.svg";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog.tsx";
+// import {
+//   Dialog,
+//   DialogContent,
+//   DialogDescription,
+//   DialogHeader,
+//   DialogTitle,
+//   DialogTrigger,
+// } from "@/components/ui/dialog.tsx";
 import {
   Pagination,
   PaginationContent,
@@ -42,6 +42,7 @@ import {
 } from "@/components/ui/pagination.tsx";
 import { abi as ddmeshMarketAbi } from "../contracts/DDMeshMarket.sol/DDMeshMarket.json";
 import { formatEther } from "viem";
+import { QueryDialog } from "./QueryDialog";
 
 export const UserAgreements = () => {
   // const [providerChoice, _] = useState<bigint>(BigInt(0));
@@ -223,26 +224,14 @@ export const UserAgreements = () => {
       header: () => {
         return <CenterAlignedHeader header="Actions" />;
       },
+      // @ts-ignore
       cell: ({ row }: any) => {
         return (
           <div className={"flex w-24 space-x-2"}>
             <Button onClick={() => console.log("TOP UP CLICKED")}>
               Top Up
             </Button>
-            <Dialog>
-              <DialogTrigger asChild>
-                <Button variant="secondary">Conn. String</Button>
-              </DialogTrigger>
-              <DialogContent className="sm:max">
-                <DialogHeader>
-                  <DialogTitle>API Key</DialogTitle>
-                  <DialogDescription>
-                    {row.original?.encConnectionString}
-                  </DialogDescription>
-                </DialogHeader>
-              </DialogContent>
-            </Dialog>
-
+            <QueryDialog connectionString={'postgresql://ddtest_owner:gwMW5CZOQI3G@ddmesh.eth/ddtest?sslmode=require'}/>
             <Button
               variant={"secondary"}
               onClick={() => console.log("TERMINATE CLICKED")}
