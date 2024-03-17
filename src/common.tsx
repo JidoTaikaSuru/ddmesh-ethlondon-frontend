@@ -20,33 +20,41 @@ export const IconButton: React.FC<{
   );
 };
 
-export const RenderMESHInWeek: FC<{perSecondFee: number}> = ({perSecondFee}) => {
-    return (<div>
-        <div>Per week</div>
-        <div className={"flex justify-between items-center space-x-2 gap-1"}>
-            <img src={DDMeshLogo} style={{height: 20}}/>
-            {(perSecondFee * ONE_WEEK).toFixed(2)} DDM
-        </div>
-    </div>);
+export const RenderMESHInWeek: FC<{ perSecondFee: number }> = ({
+  perSecondFee,
+}) => {
+  return (
+    <div>
+      <div>Per week</div>
+      <div className={"flex justify-between items-center space-x-2 gap-1"}>
+        <img src={DDMeshLogo} style={{ height: 20 }} />
+        {(perSecondFee * ONE_WEEK).toFixed(2)} DDM
+      </div>
+    </div>
+  );
 };
 
-export const RenderMESHInMonth: FC<{ perSecondFee: number }> = ({perSecondFee}) => {
-    return (<div className={"flex-col text-center"}>
-        <div>Per month</div>
-        <div className={"flex justify-center items-center space-x-2 gap-1"}>
-            <img src={DDMeshLogo} style={{height: 20}}/>
-            {(perSecondFee * ONE_MONTH).toFixed(2)} DDM
-        </div>
-    </div>);
+export const RenderMESHInMonth: FC<{ perSecondFee: number }> = ({
+  perSecondFee,
+}) => {
+  return (
+    <div className={"flex-col text-center"}>
+      <div>Per month</div>
+      <div className={"flex justify-center items-center space-x-2 gap-1"}>
+        <img src={DDMeshLogo} style={{ height: 20 }} />
+        {(perSecondFee * ONE_MONTH).toFixed(2)} DDM
+      </div>
+    </div>
+  );
 };
 
-export const hardcodedDDMToUsdFee = () => 50;
+export const DDMToUsdFee = (ddm: number) => 100 * ddm;
 
-export const CenterAlignedHeader: FC<{ header: string }> = ({header}) => (
-    <div className="capitalize text-center">{header}</div>
+export const CenterAlignedHeader: FC<{ header: string }> = ({ header }) => (
+  <div className="capitalize text-center">{header}</div>
 );
 export type Agreement = {
-    id: bigint; // or number, if within JS safe integer range
+  id: bigint; // or number, if within JS safe integer range
   user: string; // Address as a string
   userBalance: bigint; // or number
   providerAddress: string; // Address as a string

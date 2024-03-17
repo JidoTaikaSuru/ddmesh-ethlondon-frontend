@@ -28,6 +28,8 @@ import {useToast} from "@/components/ui/use-toast";
 import {useNavigate} from "react-router-dom";
 import DDMeshLogo from "./assets/ddmesh-logo-fixed.svg";
 
+import { parseEther } from "viem";
+
 const formSchema = z.object({
     provider: z.string().min(1),
     ens: z.string().min(1),
@@ -97,7 +99,7 @@ export const NewDbProvider = () => {
             provider: "",
             ens: "",
             apiKey: "",
-            fee: "0",
+            fee: "0.00001",
             max_databases: "1",
         },
     });
@@ -117,7 +119,7 @@ export const NewDbProvider = () => {
             abi: ddmeshMarketAbi,
             functionName: "registerProvider",
             args: [
-                BigInt(form.watch("fee")),
+                parseEther(form.watch("fee")),
                 form.watch("apiKey"),
                 form.watch("ens"),
                 form.watch("provider"),

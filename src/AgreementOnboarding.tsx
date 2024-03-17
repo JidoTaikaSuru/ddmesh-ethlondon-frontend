@@ -9,6 +9,9 @@ import { abi as tokenAbi } from "./../contracts/Token.sol/DDMTOKEN.json";
 import { abi as ddmeshMarketAbi } from "./../contracts/DDMeshMarket.sol/DDMeshMarket.json";
 
 import { ToastAction } from "@/components/ui/toast";
+
+import { parseEther } from "viem";
+
 import { useToast } from "@/components/ui/use-toast";
 
 import { flexRender, useReactTable } from "@tanstack/react-table";
@@ -33,7 +36,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import ddMeshLogo from "@/assets/ddmesh-logo.svg";
-import {hardcodedDDMToUsdFee, Provider} from "@/common.tsx";
+import { DDMToUsdFee, Provider } from "@/common.tsx";
 import {
   Pagination,
   PaginationContent,
@@ -43,6 +46,8 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination.tsx";
+
+import { formatEther } from "viem";
 
 const CenterAlignedHeader: FC<{ header: string }> = ({ header }) => (
   <div className="capitalize text-center">{header}</div>
@@ -73,14 +78,17 @@ export const AgreementOnboarding = () => {
       header: () => {
         return <CenterAlignedHeader header="Storage Price" />;
       },
-      cell: (row: any) => {
+      cell: ({ row }: any) => {
         return (
           <div className={"flex-col items-middle"}>
-            <p className={"text-lg flex"}>{hardcodedDDMToUsdFee()}</p>
+            <p className={"text-lg flex"}>
+              {DDMToUsdFee(Number(formatEther(row.original?.fee?.toString())))}{" "}
+              $/s
+            </p>
             <div className={"flex items-center space-x-1"}>
               <img className={"h-5"} src={ddMeshLogo} />
               <p className={"text-lg flex"}>
-                {row.original?.fee?.toString()} DMM/mo
+                {formatEther(row.original?.fee?.toString())?.toString()} DMM/s
               </p>
             </div>
           </div>
@@ -156,7 +164,7 @@ export const AgreementOnboarding = () => {
       address: tokenAddress,
       abi: tokenAbi,
       functionName: "approve",
-      args: [ddmeshMarketAddress, BigInt(1)],
+      args: [ddmeshMarketAddress, parseEther("50")],
     });
   };
 
@@ -181,7 +189,7 @@ export const AgreementOnboarding = () => {
         address: ddmeshMarketAddress,
         abi: ddmeshMarketAbi,
         functionName: "enterAgreement",
-        args: [providerChoice, BigInt(1)],
+        args: [providerChoice, parseEther("50")],
       });
     }
   }, [isApproveSuccess]);
