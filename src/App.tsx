@@ -13,7 +13,7 @@ import { createConfig, WagmiProvider } from "wagmi";
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { http } from "viem";
-import { arbitrumSepolia, mainnet } from "viem/chains";
+import { arbitrumSepolia, baseSepolia, mainnet } from "viem/chains";
 import Routes from "@/Routes";
 import { Toaster } from "./components/ui/toaster";
 import DDMeshLogo from "./assets/ddmesh-logo-fixed.svg";
@@ -37,12 +37,13 @@ export const ddmeshOrbit = {
 } as const satisfies Chain;
 
 const config = createConfig({
-  chains: [mainnet, ddmeshOrbit, arbitrumSepolia],
+  chains: [mainnet, ddmeshOrbit, arbitrumSepolia, baseSepolia],
   multiInjectedProviderDiscovery: false,
   transports: {
     1: http(),
-    82554: http(),
-    421614: http(),
+    82554: http(), // ddMesh Orbit
+    421614: http(), // arbitrum sepolia
+    84532: http(), //base sepolia
   },
 });
 
@@ -92,6 +93,21 @@ function App() {
                 rpcUrls: ["https://sepolia-rollup.arbitrum.io/rpc"],
                 blockExplorerUrls: ["https://sepolia.arbiscan.io/"],
                 vanityName: "Arbitrum Sepolia",
+              },
+              {
+                chainId: 84532,
+                chainName: "Base Sepolia",
+                iconUrls: ["https://app.dynamic.xyz/assets/networks/base.svg"],
+                name: "Base Sepolia",
+                nativeCurrency: {
+                  name: "ETH",
+                  symbol: "ETH",
+                  decimals: 18,
+                },
+                networkId: 84532,
+                rpcUrls: ["https://rpc.notadegen.com/base/sepolia"],
+                blockExplorerUrls: ["https://sepolia.basescan.org/"],
+                vanityName: "Base Sepolia",
               },
             ],
           },

@@ -14,6 +14,12 @@ const contracts = {
     token: "0xBBB017c1db26096280852A93eF9e9A355f82C82d",
     ddmeshMarket: "0xedAD445861Fb830dD38148BD5fb7913B3C3F7Aaf",
   },
+  84532: {
+    //base sepolia
+    token: "0xBBB017c1db26096280852A93eF9e9A355f82C82d",
+    // ddmeshMarket: "0x6359a62c07AB8694746046eC7Db834112f53BfE5",
+    ddmeshMarket: "0x2f77ed64b404572f86Bd5345F904d754DEc99338",
+  },
 };
 
 export const getContracts = (chainId: number): Contracts => {
