@@ -2,8 +2,8 @@ import {Button, ButtonProps} from "@/components/ui/button.tsx";
 import * as React from "react";
 import {FC} from "react";
 
-const ONE_WEEK = 60 * 24 * 7;
-const ONE_MONTH = 60 * 24 * 30;
+const ONE_WEEK = 60 * 60 * 24 * 7;
+const ONE_MONTH = 60 * 60 * 24 * 30;
 export const IconButton: React.FC<{ icon: string, text: string, buttonProps: ButtonProps }> = ({icon, text, buttonProps}) => {
     return (<Button className="flex items-center w-48 gap-2" {...buttonProps}>
         <div className="bg-black rounded-full flex justify-center items-center w-6 h-6">
@@ -13,17 +13,17 @@ export const IconButton: React.FC<{ icon: string, text: string, buttonProps: But
     </Button>)
 }
 
-export const RenderMESHInWeek: FC<{perMinuteFee: number}> = ({perMinuteFee}) => {
+export const RenderMESHInWeek: FC<{perSecondFee: number}> = ({perSecondFee}) => {
     return <div>
         <div>Per week</div>
-        <div>{(perMinuteFee * ONE_WEEK).toFixed(2)} MESH</div>
+        <div>{(perSecondFee * ONE_WEEK).toFixed(2)} DDM</div>
     </div>
 }
 
-export const RenderMESHInMonth: FC<{perMinuteFee: number}> = ({perMinuteFee}) => {
+export const RenderMESHInMonth: FC<{perSecondFee: number}> = ({perSecondFee}) => {
     return <div className={"flex-col text-center"}>
         <div>Per month</div>
-        <div>{(perMinuteFee * ONE_MONTH).toFixed(2)} MESH</div>
+        <div>{(perSecondFee * ONE_MONTH).toFixed(2)} DDM</div>
     </div>
 }
 
