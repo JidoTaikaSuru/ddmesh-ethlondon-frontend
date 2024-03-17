@@ -15,7 +15,7 @@ import {Provider} from "@/DbProviderOnboarding";
 import {useChainId, useReadContract} from "wagmi";
 import {abi as ddmeshMarketAbi} from "../contracts/DDMeshMarket.sol/DDMeshMarket.json";
 import {getContracts} from "@/config/contracts.config";
-import ddMeshLogo from "@/assets/ddmesh-logo.svg";
+import ddMeshLogo from "@/assets/ddmesh-logo-fixed.svg";
 import {hardcodedDDMToUsdFee} from "@/common";
 import {
     Dialog,
@@ -113,7 +113,10 @@ const Agreements = () => {
                 return <CenterAlignedHeader header="User balance"/>
             },
             cell: ({row}: any) => (
-                <div className="capitalize">{row.getValue("userBalance")}</div>
+                <div className={"flex items-center space-x-1"}>
+                    <img className={"h-5"} src={ddMeshLogo} />
+                    <p className={"text-lg flex"}>{row.getValue("userBalance")}</p>
+                </div>
             ),
         },
         {
@@ -243,9 +246,6 @@ export const ProviderDashboard = () => {
     const onDelete = async () => {
     };
 
-    const showApiKey = async () => {
-    };
-
     const [sorting, setSorting] = React.useState<SortingState>([])
     const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
         []
@@ -261,14 +261,12 @@ export const ProviderDashboard = () => {
                 return <CenterAlignedHeader header="Fee"/>
             },
             cell: ({row}: any) => (
-                <div className="capitalize">
-                    <p className={"text-lg flex"}>
-                        {hardcodedDDMToUsdFee()}
-                    </p>
-                    <img className={"h-5"} src={ddMeshLogo}/>
-                    <p className={"text-lg flex"}>
-                        {row.getValue("fee")} DMM/mo
-                    </p>
+                <div className={"flex-col items-middle"}>
+                    <p className={"text-lg flex"}>{hardcodedDDMToUsdFee()}</p>
+                    <div className={"flex items-center space-x-1"}>
+                        <img className={"h-5"} src={ddMeshLogo} />
+                        <p className={"text-lg flex"}>{row.getValue("fee")} DMM/mo</p>
+                    </div>
                 </div>
             ),
         },
