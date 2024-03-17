@@ -1,4 +1,5 @@
 import {Button, ButtonProps} from "@/components/ui/button.tsx";
+import * as React from "react";
 import {FC} from "react";
 
 const ONE_WEEK = 60 * 24 * 7;
@@ -27,3 +28,27 @@ export const RenderMESHInMonth: FC<{perMinuteFee: number}> = ({perMinuteFee}) =>
 }
 
 export const hardcodedDDMToUsdFee = () => 50
+
+export const CenterAlignedHeader: FC<{ header: string }> = ({header}) => (
+    <div className="capitalize text-center">{header}</div>
+)
+export type Agreement = {
+    id: bigint; // or number, if within JS safe integer range
+    user: string; // Address as a string
+    userBalance: bigint; // or number
+    providerAddress: string; // Address as a string
+    providerId: bigint; // or number
+    providerClaimed: bigint; // or number
+    encConnectionString: string;
+    startTimeStamp: bigint; // or number, timestamp as number is usually safe
+    status: AgreementStatus;
+};
+
+export enum AgreementStatus {
+    NONE,
+    ENTERED,
+    ACTIVE,
+    CLOSED,
+    REVOKED,
+    ERROR,
+}

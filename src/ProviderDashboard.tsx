@@ -15,38 +15,73 @@ import {Provider} from "@/DbProviderOnboarding";
 import {useChainId, useReadContract} from "wagmi";
 import {abi as ddmeshMarketAbi} from "../contracts/DDMeshMarket.sol/DDMeshMarket.json";
 import {getContracts} from "@/config/contracts.config";
-import ddMeshLogo from "@/assets/ddmesh-logo.svg";
+import ddMeshLogo from "@/assets/ddmesh-logo-fixed.svg";
 import {hardcodedDDMToUsdFee} from "@/common";
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
+} from "@/components/ui/dialog"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
 
-const customersData: Customer[] = [
+const agreements: Agreement[] = [
     {
-        id: "derv1ws0",
-        topUp: "5.3",
-        eligibleClaim: "0.1",
+        id: 4,
+        user: "User10",
+        userBalance: 5.3,
+        providerId: 3,
+        startTimeStamp: 3543,
+        status: "ENTERED",
+        providerAddress: "providerAddress",
+        providerClaimed: "providerClaimed",
+        encConnectionString: "fakeConnectionString1",
     },
     {
-        id: "5kma53ae",
-        topUp: "5.3",
-        eligibleClaim: "0.1",
+        id: 23,
+        user: "User10",
+        userBalance: 5.3,
+        providerId: 3,
+        startTimeStamp: 3543,
+        status: "ENTERED",
+        providerAddress: "providerAddress",
+        providerClaimed: "providerClaimed",
+        encConnectionString: "fakeConnectionString1",
     },
     {
-        id: "bhqecj4p",
-        topUp: "5.3",
-        eligibleClaim: "0.1",
+        id: 10,
+        user: "User10",
+        userBalance: 5.3,
+        providerId: 3,
+        startTimeStamp: 3543,
+        status: "ENTERED",
+        providerAddress: "providerAddress",
+        providerClaimed: "providerClaimed",
+        encConnectionString: "fakeConnectionString1",
     },
 ]
 
-export type Customer = {
-    id: string
-    topUp: string
-    eligibleClaim: string
+export type Agreement = {
+    id: bigint
+    user: string
+    userBalance: bigint
+    providerId: bigint
+    startTimeStamp: bigint
+    status: string
+    providerAddress: string
+    providerClaimed: string
+    encConnectionString: string
 }
 
 const CenterAlignedHeader: FC<{ header: string }> = ({header}) => (
     <div className="capitalize text-center">{header}</div>
 )
 
-const Customers = () => {
+const Agreements = () => {
 
     const [sorting, setSorting] = React.useState<SortingState>([])
     const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
@@ -59,24 +94,50 @@ const Customers = () => {
     const onClaim = async () => {
     };
 
-    const columns: ColumnDef<Customer>[] = [
+    const onWithdraw = async () => {
+    };
+
+    const columns: ColumnDef<Agreement>[] = [
         {
-            accessorKey: "topUp",
+            accessorKey: "user",
             header: () => {
-                return <CenterAlignedHeader header="Top Up"/>
+                return <CenterAlignedHeader header="User"/>
             },
             cell: ({row}: any) => (
-                <div className="capitalize">{row.getValue("topUp")}</div>
+                <div className="capitalize">{row.getValue("user")}</div>
             ),
         },
         {
-            accessorKey: "eligibleClaim",
+            accessorKey: "userBalance",
             header: () => {
-                return <CenterAlignedHeader header="Eligible Claim"/>
+                return <CenterAlignedHeader header="User balance"/>
             },
             cell: ({row}: any) => (
-                <div className="capitalize">{row.getValue("eligibleClaim")}</div>
+                <div className={"justify-center flex items-center space-x-1"}>
+                    <img className={"h-5"} src={ddMeshLogo} />
+                    <p className={"text-lg"}>{row.getValue("userBalance")}</p>
+                </div>
             ),
+        },
+        {
+            accessorKey: "status",
+            header: () => {
+                return <CenterAlignedHeader header="Status"/>
+            },
+            cell: ({row}: any) => (
+                <div className="capitalize">{row.getValue("status")}</div>
+            ),
+        },
+        {
+            accessorKey: "button",
+            header: () => {
+                return <CenterAlignedHeader header=""/>
+            },
+            cell: () => (
+                <div>
+                    <Button onClick={() => onWithdraw()}>Withdraw</Button>
+                </div>
+            )
         },
         {
             accessorKey: "button",
@@ -92,7 +153,7 @@ const Customers = () => {
     ]
 
     const table = useReactTable({
-        data: customersData || [] ,
+        data: agreements || [] ,
         columns,
         onSortingChange: setSorting,
         onColumnFiltersChange: setColumnFilters,
@@ -114,7 +175,7 @@ const Customers = () => {
         <div className={"text-center"}>
             <br/>
             <h3 className="mt-10 scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight transition-colors first:mt-0">
-                Customers
+                Agreements
             </h3>
             <Table>
                 <TableHeader>
@@ -195,19 +256,17 @@ export const ProviderDashboard = () => {
 
     const columns: ColumnDef<Provider>[] = [
         {
-            accessorKey: "description",
+            accessorKey: "fee",
             header: () => {
-                return <CenterAlignedHeader header="Name"/>
+                return <CenterAlignedHeader header="Fee"/>
             },
             cell: ({row}: any) => (
-                <div className="capitalize">
-                    <p className={"text-lg flex"}>
-                        {hardcodedDDMToUsdFee()}
-                    </p>
-                    <img className={"h-5"} src={ddMeshLogo}/>
-                    <p className={"text-lg flex"}>
-                        {row.getValue("fee")} DMM/mo
-                    </p>
+                <div className={"flex-col items-middle"}>
+                    <p className={"text-lg flex"}>{hardcodedDDMToUsdFee()}</p>
+                    <div className={"flex items-center space-x-1"}>
+                        <img className={"h-5"} src={ddMeshLogo} />
+                        <p className={"text-lg flex"}>{row.getValue("fee")} DMM/mo</p>
+                    </div>
                 </div>
             ),
         },
@@ -219,6 +278,56 @@ export const ProviderDashboard = () => {
             cell: ({row}: any) => (
                 <div className="capitalize">{row.getValue("description")}</div>
             ),
+        },
+        {
+            accessorKey: "ensName",
+            header: () => {
+                return <CenterAlignedHeader header="ens Name"/>
+            },
+            cell: ({row}: any) => (
+                <div className="capitalize">{row.getValue("ensName")}</div>
+            ),
+        },
+        {
+            accessorKey: "noOfDbAgreements",
+            header: () => {
+                return <CenterAlignedHeader header="Number of Agreements"/>
+            },
+            cell: ({row}: any) => (
+                <div className="capitalize">{row.getValue("noOfDbAgreements")}</div>
+            ),
+        },
+        {
+            accessorKey: "activeAgreements",
+            header: () => {
+                return <CenterAlignedHeader header="Active Agreements"/>
+            },
+            cell: ({row}: any) => (
+                <div className="capitalize">{row.getValue("activeAgreements")}</div>
+            ),
+        },
+        {
+            accessorKey: "encApiKey",
+            header: () => {
+                return <CenterAlignedHeader header=""/>
+            },
+            cell: ({row}: any) => (
+                <div>
+                    <Dialog>
+                        <DialogTrigger asChild>
+                            <Button onClick={() => onDelete()} variant="secondary">Show API Key</Button>
+                        </DialogTrigger>
+                        <DialogContent className="sm:max">
+                            <DialogHeader>
+                                <DialogTitle>API Key</DialogTitle>
+                                <DialogDescription>
+                                    {row.getValue("encApiKey")}
+                                </DialogDescription>
+                            </DialogHeader>
+                        </DialogContent>
+                    </Dialog>
+                </div>
+            )
         },
         {
             accessorKey: "button",
@@ -323,7 +432,7 @@ export const ProviderDashboard = () => {
                     </Table>
                 </div>
             </div>
-            <Customers/>
+            <Agreements/>
         </>
     );
 };

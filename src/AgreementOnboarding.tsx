@@ -1,9 +1,9 @@
 import PostgresLogo from "@/assets/postgres.svg";
 import { Button } from "@/components/ui/button";
 import * as React from "react";
-import { FC, useEffect, useState } from "react";
-import { useChainId, useReadContract, useWriteContract } from "wagmi";
-import { getContracts } from "./config/contracts.config";
+import { useEffect, useState} from "react";
+import {useChainId, useReadContract, useWriteContract} from "wagmi";
+import {getContracts} from "./config/contracts.config";
 
 import { abi as tokenAbi } from "./../contracts/Token.sol/DDMTOKEN.json";
 import { abi as ddmeshMarketAbi } from "./../contracts/DDMeshMarket.sol/DDMeshMarket.json";
@@ -33,7 +33,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import ddMeshLogo from "@/assets/ddmesh-logo.svg";
-import { hardcodedDDMToUsdFee } from "@/common.tsx";
+import { CenterAlignedHeader, hardcodedDDMToUsdFee} from "@/common.tsx";
 
 type Provider = {
   id: bigint;
@@ -235,7 +235,10 @@ export const DbProviderOnboarding = () => {
 
   return (
     <>
-      <div className="rounded-md border">
+      <p className="leading-7 [&:not(:first-child)]:mt-6 text-2xl">
+                My Agreementss
+            </p>
+            <div className="rounded-md border">
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
