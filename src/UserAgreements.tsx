@@ -79,7 +79,7 @@ export const UserAgreements = () => {
     args: [userAddress],
   });
 
-  // get the user remaining balances for each agreeement.
+  //// get the user remaining balances for each agreeement.
   // by the provider fee, and the time the agreement has been active, curr time - starttime.
   // map the provider id to the
 
