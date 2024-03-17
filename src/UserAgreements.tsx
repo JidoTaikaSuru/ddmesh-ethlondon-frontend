@@ -18,6 +18,14 @@ import {Agreement, AgreementStatus, CenterAlignedHeader} from "@/common.tsx";
 import {flexRender, useReactTable} from "@tanstack/react-table";
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table.tsx";
 import DDMeshLogo from "./assets/ddmesh-logo-fixed.svg";
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger
+} from "@/components/ui/dialog.tsx";
 
 type Provider = {
     id: bigint;
@@ -120,7 +128,7 @@ export const UserAgreements = () => {
             cell: ({row}: any) => (
                 <div className={"flex items-center justify-center"}>
                     <p>
-                        {row.original.providerId.toString()}
+                        {row.original?.providerId.toString()}
                     </p>
                 </div>
             ),
@@ -135,7 +143,6 @@ export const UserAgreements = () => {
                     <img src={DDMeshLogo} style={{height: 20}}/>
                     <p>
                         1,000 DDM
-                        {/*{row.getValue("userBalance") - row.getValue("providerClaimed")}*/}
                     </p>
                 </div>
             ),
@@ -164,17 +171,20 @@ export const UserAgreements = () => {
             header: () => {
                 return <CenterAlignedHeader header="Actions"/>
             },
-            cell: () => (
-                <div className={"flex w-24 space-x-2"}>
-                    <Button onClick={() => console.log("TOP UP CLICKED")}>Top Up</Button>
-                    <Button variant={"secondary"} onClick={() => console.log("TOP UP CLICKED")}>Conn. String</Button>
-                    <Button variant={"secondary"} onClick={() => console.log("TERMINATE CLICKED")}>Terminate</Button>
-                </div>
-            )
+            cell: ({row}: any) => {
+                return (
+                    <div className={"flex w-24 space-x-2"}>
+                        <Button onClick={() => console.log("TOP UP CLICKED")}>Top Up</Button>
+                        <Button variant={"secondary"} onClick={() => console.log(row.original?.encConnectionString)}>Conn. String</Button>
+                        <Button variant={"secondary"} onClick={() => console.log("TERMINATE CLICKED")}>Terminate</Button>
+                    </div>
+                )
+            }
         },
 
     ]
 
+    //
 
     const agreements: Agreement[] = [
         {
@@ -310,6 +320,7 @@ export const UserAgreements = () => {
                         </Button>
                     </div>
                 </div>
+
             </div>
         </>
     );

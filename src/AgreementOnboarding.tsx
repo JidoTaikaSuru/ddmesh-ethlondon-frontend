@@ -52,7 +52,7 @@ const CenterAlignedHeader: FC<{ header: string }> = ({header}) => (
     <div className="capitalize text-center">{header}</div>
 );
 
-export const DbProviderOnboarding = () => {
+export const AgreementOnboarding = () => {
     const {toast} = useToast();
     const [providerChoice, setProviderChoice] = useState<bigint>(BigInt(0));
 
@@ -77,12 +77,12 @@ export const DbProviderOnboarding = () => {
             header: () => {
                 return <CenterAlignedHeader header="Storage Price"/>;
             },
-            cell: ({row}: any) => {
+            cell: (row: any) => {
                 return (<div className={"flex-col items-middle"}>
                         <p className={"text-lg flex"}>{hardcodedDDMToUsdFee()}</p>
                         <div className={"flex items-center space-x-1"}>
                             <img className={"h-5"} src={ddMeshLogo}/>
-                            <p className={"text-lg flex"}>{row.original.fee.toString()} DMM/mo</p>
+                            <p className={"text-lg flex"}>{row.original?.fee?.toString()} DMM/mo</p>
                         </div>
                     </div>
                 );
@@ -122,11 +122,11 @@ export const DbProviderOnboarding = () => {
             header: () => {
                 return <CenterAlignedHeader header="Deploy"/>;
             },
-            cell: ({row}: any) => (
+            cell: (row: any) => (
                 <div>
                     <Button
                         onClick={() => {
-                            setProviderChoice(row.original.id);
+                            setProviderChoice(row.original?.id);
                             onDeploy();
                         }}
                     >
