@@ -1,7 +1,7 @@
 import PostgresLogo from "@/assets/postgres.svg";
 import {Button} from "@/components/ui/button";
 import * as React from "react";
-import {FC, useEffect, useState} from "react";
+import {useEffect, useState} from "react";
 import {useChainId, useReadContract, useWriteContract} from "wagmi";
 import {getContracts} from "./config/contracts.config";
 
@@ -26,7 +26,7 @@ import {
 
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow,} from "@/components/ui/table"
 import ddMeshLogo from "@/assets/ddmesh-logo.svg";
-import {hardcodedDDMToUsdFee} from "@/common.tsx";
+import {CenterAlignedHeader, hardcodedDDMToUsdFee} from "@/common.tsx";
 
 
 type Provider = {
@@ -41,12 +41,7 @@ type Provider = {
 };
 
 
-const CenterAlignedHeader: FC<{ header: string }> = ({header}) => (
-    <div className="capitalize text-center">{header}</div>
-)
-
-
-export const DbProviderOnboarding = () => {
+export const AgreementOnboarding = () => {
     const {toast} = useToast();
     const [providerChoice,] = useState<bigint>(BigInt(0));
 
@@ -236,6 +231,9 @@ export const DbProviderOnboarding = () => {
 
     return (
         <>
+            <p className="leading-7 [&:not(:first-child)]:mt-6 text-2xl">
+                My Agreementss
+            </p>
             <div className="rounded-md border">
                 <Table>
                     <TableHeader>
