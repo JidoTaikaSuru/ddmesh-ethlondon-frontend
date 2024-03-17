@@ -15,6 +15,8 @@ import {Provider} from "@/DbProviderOnboarding";
 import {useChainId, useReadContract} from "wagmi";
 import {abi as ddmeshMarketAbi} from "../contracts/DDMeshMarket.sol/DDMeshMarket.json";
 import {getContracts} from "@/config/contracts.config";
+import ddMeshLogo from "@/assets/ddmesh-logo.svg";
+import {hardcodedDDMToUsdFee} from "@/common";
 
 const customersData: Customer[] = [
     {
@@ -198,7 +200,15 @@ export const ProviderDashboard = () => {
                 return <CenterAlignedHeader header="Name"/>
             },
             cell: ({row}: any) => (
-                <div className="capitalize">{row.getValue("description")}</div>
+                <div className="capitalize">
+                    <p className={"text-lg flex"}>
+                        {hardcodedDDMToUsdFee()}
+                    </p>
+                    <img className={"h-5"} src={ddMeshLogo}/>
+                    <p className={"text-lg flex"}>
+                        {row.getValue("fee")} DMM/mo
+                    </p>
+                </div>
             ),
         },
         {
