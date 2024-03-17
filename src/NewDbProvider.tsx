@@ -212,10 +212,11 @@ export const NewDbProvider = () => {
   return (
     <>
       <div className="flex justify-center">
-        <div className="flex-col">
+        <div className="w-2/3 m-auto px-5 flex justify-center items-center flex-col">
           {/*DATABASE PROVIDER CARD*/}
           <Card className="min-w-96 w-2/3">
-            <p
+            <Button
+              variant={"secondary"}
               onClick={() => {
                 if (step === 1) {
                   navigate("/");
@@ -224,8 +225,8 @@ export const NewDbProvider = () => {
                 }
               }}
             >
-              Back...
-            </p>
+              &larr; Back
+            </Button>
 
             <CardHeader>
               <CardTitle>Pick a database host</CardTitle>
@@ -256,7 +257,7 @@ export const NewDbProvider = () => {
                 );
               } else if (step === 2) {
                 return (
-                  <CardContent className={"flex flex-col space-y-2"}>
+                  <CardContent className={"flex-col space-y-2"}>
                     <Form {...form}>
                       {/*TODO get decorator for feeToken here*/}
                       <form
