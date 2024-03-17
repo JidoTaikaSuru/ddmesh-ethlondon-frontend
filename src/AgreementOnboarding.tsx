@@ -83,7 +83,7 @@ export const AgreementOnboarding = () => {
           <div className={"flex-col items-middle"}>
             <p className={"text-lg flex"}>
               {DDMToUsdFee(Number(formatEther(row.original?.fee?.toString())))}{" "}
-              $/s
+              /space $/s
             </p>
             <div className={"flex items-center space-x-1"}>
               <img className={"h-5"} src={ddMeshLogo} />
