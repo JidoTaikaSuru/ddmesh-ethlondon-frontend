@@ -1,5 +1,4 @@
 //@ts-ignore
-
 import "./App.css";
 
 import {
@@ -20,13 +19,30 @@ import { Toaster } from "./components/ui/toaster";
 import DDMeshLogo from "./assets/ddmesh-logo-fixed.svg";
 import { Link } from "react-router-dom";
 
+import { type Chain } from "viem";
+
+export const ddmeshOrbit = {
+  id: 82554,
+  name: "DDMesh Orbit",
+  nativeCurrency: { name: "Ether", symbol: "ETH", decimals: 18 },
+  rpcUrls: {
+    default: { http: ["https://rpc-dd-mesh-4ulujj9fnb.t.conduit.xyz/"] },
+  },
+  blockExplorers: {
+    default: {
+      name: "DdMeshScan",
+      url: "https://explorerl2new-dd-mesh-4ulujj9fnb.t.conduit.xyz/",
+    },
+  },
+} as const satisfies Chain;
+
 const config = createConfig({
-  chains: [mainnet, arbitrumSepolia],
+  chains: [mainnet, ddmeshOrbit, arbitrumSepolia],
   multiInjectedProviderDiscovery: false,
   transports: {
     1: http(),
-    421614: http(),
     82554: http(),
+    421614: http(),
   },
 });
 
