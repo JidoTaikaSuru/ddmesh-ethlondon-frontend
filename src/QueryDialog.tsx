@@ -19,16 +19,16 @@ import axios from "axios";
 // import {parse as parseConnectionString} from "pg-connection-string";
 
 export const QueryDialog: FC<{ connectionString: string }> = ({
-  connectionString,
-}) => {
+                                                                connectionString,
+                                                              }) => {
   console.log("connectionString", connectionString);
   const connectionStringReplace = connectionString.replace(
-    "neon.tech/",
-    "neon.tech:5432/"
+      "neon.tech/",
+      "neon.tech:5432/"
   );
   console.log("connectionStringReplace", connectionStringReplace);
   const [query, setQuery] = useState(
-    "select table_name from information_schema.tables LIMIT 10;"
+      "select table_name from information_schema.tables LIMIT 10;"
   );
   const [startExecuteQuery, setStartExecuteQuery] = useState(false);
   const [queryResult, setQueryResult] = useState([] as any[]);
@@ -54,6 +54,7 @@ export const QueryDialog: FC<{ connectionString: string }> = ({
         });
         console.log("res", res.data.rows);
         setQueryResult(res.data.rows);
+        setQueryError("")
       } catch (e: any) {
         console.error(e);
         setQueryError(e.message);
@@ -63,32 +64,33 @@ export const QueryDialog: FC<{ connectionString: string }> = ({
     if (startExecuteQuery) {
       executeQuery();
     }
-})
-   
+  })
+
 
   return (
-    <Dialog>
-      <DialogTrigger asChild>
-        <Button variant="secondary">Conn. String</Button>
-      </DialogTrigger>
-      <DialogContent className="sm:max">
-        <DialogHeader>
-          <DialogTitle>API Key</DialogTitle>
-          <DialogDescription>
-            <Card className="w-96 overflow-scroll bg-secondary">
-              {connectionString}
-              <Button onClick={copy}>Copy</Button>
-            </Card>
-            <Textarea
-              placeholder="Type your SQL query here"
-              onChange={(e) => setQuery(e.target.value)}
-            />
-            {JSON.stringify(queryResult, null, 2)}
-            <p className={"text-red-500"}>{queryError.toString()}</p>
-            <Button onClick={() => setStartExecuteQuery(true)}>Execute</Button>
-          </DialogDescription>
-        </DialogHeader>
-      </DialogContent>
-    </Dialog>
+      <Dialog>
+        <DialogTrigger asChild>
+          <Button variant="secondary">Conn. String</Button>
+        </DialogTrigger>
+        <DialogContent className="sm:max">
+          <DialogHeader>
+            <DialogTitle>Connection String/Query</DialogTitle>
+            <DialogDescription>
+              <Card className="w-96 overflow-scroll bg-secondary">
+                {connectionString}
+                <Button onClick={copy}>Copy</Button>
+              </Card>
+              <Textarea
+                  placeholder="Type your SQL query here"
+                  defaultValue={query}
+                  onChange={(e) => setQuery(e.target.value)}
+              />
+              {JSON.stringify(queryResult, null, 2)}
+              <p className={"text-red-500"}>{queryError.toString()}</p>
+              <Button onClick={() => setStartExecuteQuery(true)}>Execute</Button>
+            </DialogDescription>
+          </DialogHeader>
+        </DialogContent>
+      </Dialog>
   );
 };
